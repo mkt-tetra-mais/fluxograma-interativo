@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RUMO — Guia de Licenciamento Ambiental</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== THEME VARIABLES ===== */
+  :root {
+    --rumo-blue: #003865;
+    --rumo-blue-light: #32A6E6;
+    --rumo-accent: #32A6E6;
+    /* Organ accent colors — used ONLY as left-border identifiers */
+    --org-ibama: #1E9F7F;
+    --org-sema: #1E9F7F;
+    --org-cetesb: #32A6E6;
+    --org-iphan: #F78344;
+    --org-icmbio: #7FE06C;
+    --org-funai: #F78344;
+    --org-prelicen: #9F4BB9;
+    --org-implant: #c8a800;
+    --org-conama: #c62828;
+    /* Semantic status colors */
+    --color-attention: #F78344;
+    --color-critical: #c62828;
+    --color-success: #1E9F7F;
+    --color-info: #32A6E6;
+    /* Step circle — neutral */
+    --step-num-bg: #E5EBEE;
+    --step-num-text: #5a6a7a;
+    --radius: 10px;
+  }
+  [data-theme="light"] {
+    --bg: #F2F5F6; --card: #fff; --border: #D7E0E5;
+    --text: #1a2533; --text-muted: #5a6a7a;
+    --shadow: 0 2px 12px rgba(0,0,0,.10);
+    --toolbar-bg: #fff; --search-bg: #F2F5F6;
+    --overlay-bg: rgba(0,0,0,.45);
+  }
+  [data-theme="dark"] {
+    --bg: #0f1923; --card: #1a2736; --border: #2a3a4e;
+    --text: #d8e2ee; --text-muted: #8a9ab0;
+    --shadow: 0 2px 12px rgba(0,0,0,.35);
+    --toolbar-bg: #1a2736; --search-bg: #0f1923;
+    --overlay-bg: rgba(0,0,0,.7);
+    --rumo-blue: #00243b; --rumo-blue-light: #1a7fb3;
+    --step-num-bg: #243447; --step-num-text: #8a9ab0;
+  }
+  [data-theme="dark"] .step, [data-theme="dark"] .card,
+  [data-theme="dark"] .overview-card, [data-theme="dark"] .legend,
+  [data-theme="dark"] .decision-opt { background: var(--card); color: var(--text); }
+  [data-theme="dark"] .doc-checklist { background: #15202e; border-color: #2a3a4e; }
+  [data-theme="dark"] .doc-checklist h4 { color: #66d9ff; }
+  [data-theme="dark"] .doc-checklist li { color: var(--text); border-bottom-color: #2a3a4e; }
+  [data-theme="dark"] .decision-block { background: var(--card); border-left-color: var(--color-attention); }
+  [data-theme="dark"] .decision-q { color: #ffb984 !important; }
+  [data-theme="dark"] .info-box.warn { background: #2a1e10; border-color: #F78344; color: #ffb984; }
+  [data-theme="dark"] .info-box.info { background: #0c1a2e; border-color: #32A6E6; color: #66d9ff; }
+  [data-theme="dark"] .info-box.success { background: #0c1e1a; border-color: #1E9F7F; color: #66cc99; }
+  [data-theme="dark"] .info-box.danger { background: #2a0c0c; border-color: #c62828; color: #ff8888; }
+  [data-theme="dark"] details > summary { color: #64b5f6; }
+  [data-theme="dark"] .section-header { background: var(--card) !important; color: var(--text) !important; border-color: var(--border) !important; }
+  [data-theme="dark"] .section-ibama .section-header,
+  [data-theme="dark"] .section-sema .section-header { border-left-color: var(--org-ibama) !important; }
+  [data-theme="dark"] .section-cetesb .section-header { border-left-color: var(--org-cetesb) !important; }
+  [data-theme="dark"] .section-iphan .section-header { border-left-color: var(--org-iphan) !important; }
+  [data-theme="dark"] .section-prelicen .section-header { border-left-color: var(--org-prelicen) !important; }
+  [data-theme="dark"] .section-implant .section-header { border-left-color: var(--org-implant) !important; }
+  [data-theme="dark"] .section-conama .section-header { border-left-color: var(--org-conama) !important; }
+  [data-theme="dark"] .section-other .section-header { border-left-color: var(--border) !important; }
+  [data-theme="dark"] .step-title { color: var(--text); }
+  [data-theme="dark"] .overview-card h2 { color: #66d9ff; }
+  [data-theme="dark"] .overview-card { border-left-color: #32A6E6; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 14px; line-height: 1.6; transition: background .3s, color .3s;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--rumo-blue) 0%, var(--rumo-blue-light) 100%);
+    color: white; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,.25);
+  }
+  .header-top { display:flex; align-items:center; padding:10px 20px; gap:14px; }
+  .header-logo { display:flex; align-items:center; }
+  .logo-img { width:127px; height:auto; }
+  .header-logo span { color: var(--rumo-accent); }
+  .header-title { flex:1; }
+  .header-title h1 { font-size:15px; font-weight:700; opacity:.95; letter-spacing:.02em; }
+  .header-title p { font-size:11px; opacity:.55; letter-spacing:.01em; }
+
+  /* Header controls */
+  .header-controls { display:flex; gap:6px; align-items:center; }
+  .hdr-btn {
+    background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+    color: white; border-radius:6px; padding:5px 10px; font-size:12px;
+    cursor:pointer; display:flex; align-items:center; gap:4px;
+    transition: background .15s; white-space:nowrap; font-weight:600;
+  }
+  .hdr-btn:hover { background: rgba(255,255,255,.22); }
+  .hdr-btn.active { background: var(--rumo-accent); color: var(--rumo-blue); border-color: var(--rumo-accent); }
+
+  /* Search */
+  .search-bar {
+    display:flex; align-items:center; gap:6px;
+    background: rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2);
+    border-radius:6px; padding:2px 8px; flex:0 0 220px;
+  }
+  .search-bar input {
+    background:none; border:none; color:white; font-size:12px;
+    outline:none; width:100%; padding:4px 0;
+  }
+  .search-bar input::placeholder { color: rgba(255,255,255,.5); }
+  .search-count { font-size:10px; color: var(--rumo-accent); white-space:nowrap; font-weight:700; }
+
+  /* Nav tabs */
+  .nav-tabs { display:flex; border-top:1px solid rgba(255,255,255,.12); }
+  .nav-tab {
+    padding:9px 18px; cursor:pointer; font-size:12.5px; font-weight:600;
+    letter-spacing:.5px; opacity:.6; border-bottom:3px solid transparent;
+    transition: all .2s; white-space:nowrap; user-select:none;
+  }
+  .nav-tab:hover { opacity:.9; background:rgba(255,255,255,.06); }
+  .nav-tab.active { opacity:1; border-bottom-color:var(--rumo-accent); background:rgba(255,255,255,.08); }
+  /* ===== TOOLBAR ===== */
+  .toolbar {
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding:8px 14px; background:var(--toolbar-bg); border-radius:var(--radius);
+    border:1px solid var(--border); margin-bottom:14px; box-shadow:0 1px 4px rgba(0,0,0,.06);
+  }
+  .toolbar-label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; }
+  .toolbar-sep { width:1px; height:20px; background:var(--border); }
+  .tb-btn {
+    padding:3px 10px; border-radius:14px; font-size:11px; font-weight:600;
+    border:1px solid var(--border); background:var(--card); color:var(--text-muted);
+    cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:4px;
+  }
+  .tb-btn:hover { border-color:#D7E0E5; }
+  .tb-btn.active { background:var(--rumo-blue); color:white; border-color:var(--rumo-blue); }
+  .tb-btn.ibama.active  { background:var(--org-ibama);   border-color:var(--org-ibama);   color:white; }
+  .tb-btn.sema.active   { background:var(--org-sema);    border-color:var(--org-sema);    color:white; }
+  .tb-btn.cetesb.active { background:var(--org-cetesb);  border-color:var(--org-cetesb);  color:white; }
+  .tb-btn.iphan.active  { background:var(--org-iphan);   border-color:var(--org-iphan);   color:white; }
+
+  /* ===== MAIN ===== */
+  main { max-width:1200px; margin:0 auto; padding:20px 18px 40px; }
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* ===== OVERVIEW CARD ===== */
+  .overview-card {
+    background:var(--card); border-radius:var(--radius); padding:18px 22px;
+    margin-bottom:14px; box-shadow:var(--shadow); border-left:4px solid var(--rumo-blue);
+    display:flex; gap:16px; align-items:flex-start;
+  }
+  .overview-icon { font-size:32px; flex-shrink:0; }
+  .overview-card h2 { font-size:17px; font-weight:800; color:var(--rumo-blue); margin-bottom:4px; letter-spacing:.01em; }
+  .overview-card p { color:var(--text-muted); font-size:12.5px; line-height:1.55; }
+  .overview-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  /* Tags: neutral base, organ color only in text */
+  .tag { padding:2px 9px; border-radius:20px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; background:var(--bg); border:1px solid var(--border); color:var(--text-muted); }
+  .tag-ibama, .tag-sema  { color:var(--org-ibama); }
+  .tag-cetesb            { color:var(--org-cetesb); }
+  .tag-iphan             { color:var(--org-iphan); }
+  .tag-icmbio            { color:var(--org-icmbio); }
+  .tag-warn              { color:var(--color-attention); border-color:#F7C4A0; }
+  .tag-blue              { color:var(--color-info); }
+
+  /* ===== SECTIONS ===== */
+  .section-group { margin-bottom:12px; }
+  .section-header {
+    display:flex; align-items:center; gap:10px; padding:12px 16px;
+    border-radius:var(--radius); cursor:pointer; user-select:none;
+    font-weight:700; font-size:14px; letter-spacing:.01em;
+    transition:filter .15s; position:relative;
+  }
+  .section-header:hover { filter:brightness(.96); }
+  .section-header .section-arrow { margin-left:auto; font-size:11px; opacity:.5; transition:transform .3s cubic-bezier(.4,0,.2,1); }
+  .section-header.open .section-arrow { transform:rotate(180deg); opacity:.8; }
+  /* Section headers: neutral bg, organ identified by left border only */
+  .section-header { background:var(--card); color:var(--text); border:1px solid var(--border); border-left-width:4px; }
+  .section-ibama .section-header, .section-sema .section-header { border-left-color: var(--org-ibama); }
+  .section-cetesb .section-header { border-left-color: var(--org-cetesb); }
+  .section-iphan .section-header { border-left-color: var(--org-iphan); }
+  .section-prelicen .section-header { border-left-color: var(--org-prelicen); }
+  .section-implant .section-header { border-left-color: var(--org-implant); }
+  .section-conama .section-header { border-left-color: var(--org-conama); }
+  .section-other .section-header { border-left-color: var(--border); }
+  .section-body {
+    overflow:hidden; max-height:0;
+    padding:0;
+    transition: max-height .35s cubic-bezier(.4,0,.2,1), padding .35s ease;
+  }
+  .section-body.open {
+    max-height:4000px;
+    padding:4px 0 8px;
+    transition: max-height .45s cubic-bezier(0,.85,.3,1), padding .3s ease;
+  }
+
+  /* ===== STEPS ===== */
+  .steps { padding:8px 0; }
+  .step {
+    display:flex; gap:12px; padding:9px 16px; border-radius:8px;
+    margin-bottom:5px; background:var(--card); border:1px solid var(--border);
+    transition:box-shadow .15s, opacity .2s; cursor:default; position:relative;
+  }
+  .step:hover { box-shadow:0 2px 10px rgba(0,0,0,.09); }
+  /* Organ identity via step left-border — subtle, functional */
+  .section-ibama .step, .section-sema .step { border-left:3px solid var(--org-ibama); }
+  .section-cetesb .step { border-left:3px solid var(--org-cetesb); }
+  .section-iphan .step { border-left:3px solid var(--org-iphan); }
+  .section-prelicen .step { border-left:3px solid var(--org-prelicen); }
+  .section-implant .step { border-left:3px solid var(--org-implant); }
+  .section-conama .step { border-left:3px solid var(--org-conama); }
+  .step-num {
+    flex-shrink:0; width:26px; height:26px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; color:var(--step-num-text);
+    background:var(--step-num-bg); margin-top:1px;
+  }
+  /* All step-num variants use the same neutral style — organ identified by step border-left */
+  .step-num.rumo, .step-num.ibama, .step-num.sema, .step-num.cetesb,
+  .step-num.iphan, .step-num.warn, .step-num.decision, .step-num.doc { background:var(--step-num-bg); color:var(--step-num-text); }
+  .step-content { flex:1; min-width:0; }
+  .step-title { font-weight:700; font-size:13px; color:var(--text); margin-bottom:2px; letter-spacing:.01em; }
+  .step-desc { font-size:12px; color:var(--text-muted); line-height:1.55; }
+  .step-meta { display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; }
+  /* Meta badges: only attention/critical carry color; rest are neutral */
+  .meta-deadline { background:#FBF5F0; color:var(--color-attention); border:1px solid #F7C4A0; }
+  .meta-warn     { background:#FBF0F0; color:var(--color-critical);   border:1px solid #F0B8B8; }
+  .meta-doc, .meta-rumo, .meta-organ, .meta-ok { background:var(--bg); color:var(--text-muted); border:1px solid var(--border); }
+  [class^="meta-"] {
+    padding:2px 7px; border-radius:12px; font-size:10.5px; font-weight:600;
+    display:inline-flex; align-items:center; gap:3px;
+  }
+
+  /* Compact mode */
+  body.compact .step-desc, body.compact .step-meta,
+  body.compact details, body.compact .info-box,
+  body.compact .decision-block { display:none !important; }
+  body.compact .step { padding:6px 16px; margin-bottom:3px; }
+
+  /* ===== DECISION BLOCK ===== */
+  .decision-block { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--color-attention); border-radius:8px; padding:12px 16px; margin:6px 0; }
+  .decision-block .decision-q { font-weight:700; font-size:12.5px; color:var(--color-attention); display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+  .decision-options { display:flex; gap:6px; flex-wrap:wrap; }
+  .decision-opt { flex:1; min-width:200px; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 12px; }
+  .decision-opt .opt-label { font-weight:700; font-size:11.5px; margin-bottom:3px; display:flex; align-items:center; gap:5px; }
+  .opt-yes { color:#1E9F7F; } .opt-no { color:#c62828; }
+  .opt-ibama { color:var(--org-ibama); } .opt-sema { color:var(--org-sema); }
+  .decision-opt p { font-size:11.5px; color:var(--text-muted); }
+
+  /* ===== DOC CHECKLIST ===== */
+  .doc-checklist { background:#F2F5F6; border:1px solid #D7E0E5; border-radius:8px; padding:10px 14px; margin:6px 0; position:relative; }
+  .doc-checklist h4 { font-size:11.5px; font-weight:700; color:#003865; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
+  .doc-checklist ul { list-style:none; }
+  .doc-checklist li { font-size:11.5px; color:var(--text); padding:2.5px 0; border-bottom:1px dashed #D7E0E5; display:flex; align-items:flex-start; gap:5px; }
+  .doc-checklist li:last-child { border-bottom:none; }
+  .doc-checklist li::before { content:"–"; color:var(--text-muted); font-size:12px; flex-shrink:0; margin-top:1px; }
+  .copy-btn {
+    position:absolute; top:8px; right:8px; background:#F0F4F8; border:1px solid #D7E0E5;
+    border-radius:4px; padding:2px 7px; font-size:10px; font-weight:600; color:#003865;
+    cursor:pointer; transition:all .15s;
+  }
+  .copy-btn:hover { background:#D7E0E5; }
+  .copy-btn.copied { background:#1E9F7F; color:white; border-color:#1E9F7F; }
+
+  /* ===== INFO BOX ===== */
+  .info-box { border-radius:8px; padding:10px 14px; margin:6px 0; font-size:12px; }
+  .info-box.warn { background:#FBF5F0; border-left:4px solid #F78344; color:#5a3a2a; }
+  .info-box.info { background:#F0F4F8; border-left:4px solid #32A6E6; color:#003865; }
+  .info-box.success { background:#F0F6F4; border-left:4px solid #1E9F7F; color:#0a5a49; }
+  .info-box.danger { background:#FBF0F0; border-left:4px solid #c62828; color:#5a0000; }
+  .info-box strong { font-weight:700; }
+
+  /* ===== CARDS / GRID ===== */
+  .grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; margin:8px 0; }
+  .card { background:var(--card); border-radius:8px; padding:12px 14px; border:1px solid var(--border); box-shadow:0 1px 4px rgba(0,0,0,.07); }
+  .card h4 { font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
+  .card p,.card li { font-size:11.5px; color:var(--text-muted); }
+  .card ul { list-style:none; }
+  .card li { padding:2px 0; display:flex; align-items:flex-start; gap:4px; }
+  .card li::before { content:"→"; color:var(--rumo-accent); font-size:10px; flex-shrink:0; margin-top:2px; }
+
+  /* ===== ORGAN BADGE ===== */
+  .organ-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:4px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+  .organ-badge.ibama  { background:var(--org-ibama);  color:white; }
+  .organ-badge.sema   { background:var(--org-sema);   color:white; }
+  .organ-badge.cetesb { background:var(--org-cetesb); color:white; }
+  .organ-badge.iphan  { background:var(--org-iphan);  color:white; }
+
+  /* ===== DETAILS / EXPANDER ===== */
+  details { margin:3px 0; }
+  details > summary { cursor:pointer; font-size:11.5px; font-weight:600; color:#32A6E6; padding:3px 0; list-style:none; display:flex; align-items:center; gap:5px; }
+  details > summary::before { content:"▸"; font-size:10px; transition:transform .2s; }
+  details[open] > summary::before { content:"▾"; }
+  details > summary::-webkit-details-marker { display:none; }
+  details .details-content { padding:5px 8px; border-left:2px solid #D7E0E5; margin-left:6px; }
+
+  /* ===== GLOSSARY TOOLTIP ===== */
+  .glossary {
+    text-decoration:underline dotted #90a4ae; text-underline-offset:2px;
+    cursor:help; position:relative; font-weight:600;
+  }
+  .glossary:hover::after {
+    content:attr(data-tip); position:absolute; bottom:calc(100% + 6px); left:50%;
+    transform:translateX(-50%); background:#263238; color:#fff; font-size:11px;
+    font-weight:400; padding:6px 10px; border-radius:6px; white-space:nowrap;
+    z-index:999; box-shadow:0 3px 12px rgba(0,0,0,.3); pointer-events:none; max-width:320px; white-space:normal;
+  }
+  .glossary:hover::before {
+    content:""; position:absolute; bottom:calc(100% + 2px); left:50%;
+    transform:translateX(-50%); border:5px solid transparent;
+    border-top-color:#263238; z-index:999;
+  }
+
+  /* ===== SHORTCUTS HELP PANEL ===== */
+  .shortcuts-panel {
+    display:none; position:absolute; top:calc(100% + 8px); right:0;
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:14px 16px; min-width:240px; box-shadow:var(--shadow); z-index:200;
+  }
+  .shortcuts-panel.show { display:block; }
+  .shortcuts-panel h4 { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+  .shortcut-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:5px 0; font-size:12px; color:var(--text); border-bottom:1px solid var(--border); }
+  .shortcut-row:last-child { border-bottom:none; }
+  kbd { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:10.5px; font-family:inherit; color:var(--text-muted); white-space:nowrap; }
+  .header-controls { position:relative; }
+
+  /* ===== TAGS CLICÁVEIS ===== */
+  .tag[data-filter] { cursor:pointer; transition:opacity .15s, transform .1s; }
+  .tag[data-filter]:hover { opacity:.8; transform:translateY(-1px); }
+
+  /* ===== FOCUS VISIBLE ===== */
+  :focus-visible { outline:2px solid var(--rumo-accent); outline-offset:2px; border-radius:3px; }
+  .nav-tab:focus-visible { outline-color:rgba(255,255,255,.8); }
+
+  /* ===== SEARCH HIGHLIGHT ===== */
+  mark.search-hl { background:#ffe082; color:#3e2723; padding:0 2px; border-radius:2px; transition:background .15s; }
+  mark.search-hl.current { background:#F78344; color:white; }
+  .search-count { font-size:11px; color:rgba(255,255,255,.75); white-space:nowrap; display:flex; align-items:center; gap:4px; }
+  .search-nav { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2); color:white; border-radius:4px; padding:1px 6px; font-size:12px; cursor:pointer; line-height:1.4; }
+  .search-nav:hover { background:rgba(255,255,255,.28); }
+  .search-nav:disabled { opacity:.3; cursor:default; }
+
+  /* ===== SEARCH EMPTY STATE ===== */
+  .search-empty-state {
+    display:none; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; padding:48px 24px; text-align:center;
+    background:var(--card); border:1px dashed var(--border); border-radius:var(--radius);
+    margin:16px 0;
+  }
+  .search-empty-state.visible { display:flex; }
+  .search-empty-icon { font-size:36px; line-height:1; opacity:.5; }
+  .search-empty-title { font-size:15px; font-weight:600; color:var(--text); }
+  .search-empty-title em { font-style:normal; color:var(--rumo-blue-light); }
+  .search-empty-sub { font-size:12px; color:var(--text-muted); max-width:320px; line-height:1.5; }
+  [data-theme="dark"] .search-empty-title em { color:var(--rumo-accent); }
+
+  /* ===== WIZARD MODAL ===== */
+  .modal-overlay {
+    display:none; position:fixed; inset:0; background:var(--overlay-bg);
+    z-index:200; align-items:center; justify-content:center;
+  }
+  .modal-overlay.show { display:flex; }
+  .modal {
+    background:var(--card); border-radius:14px; padding:28px 30px;
+    max-width:560px; width:90%; max-height:85vh; overflow-y:auto;
+    box-shadow:0 8px 40px rgba(0,0,0,.35); position:relative; color:var(--text);
+  }
+  .modal h2 { font-size:18px; margin-bottom:4px; color:var(--rumo-blue); }
+  [data-theme="dark"] .modal h2 { color:#64b5f6; }
+  .modal p.sub { font-size:12.5px; color:var(--text-muted); margin-bottom:16px; }
+  .modal-close { position:absolute; top:12px; right:14px; font-size:20px; cursor:pointer; opacity:.5; background:none; border:none; color:var(--text); }
+  .modal-close:hover { opacity:1; }
+  .wiz-q { font-weight:700; font-size:13.5px; margin:12px 0 8px; }
+  .wiz-opts { display:flex; gap:8px; flex-wrap:wrap; }
+  .wiz-opt {
+    flex:1; min-width:140px; padding:12px 14px; border:2px solid var(--border);
+    border-radius:10px; cursor:pointer; text-align:center; font-size:12.5px;
+    font-weight:600; transition:all .15s; background:var(--card); color:var(--text);
+  }
+  .wiz-opt:hover { border-color:var(--rumo-accent); background:rgba(232,160,0,.06); }
+  .wiz-opt.selected { border-color:var(--rumo-accent); background:rgba(232,160,0,.12); }
+  .wiz-opt small { display:block; font-weight:400; font-size:11px; color:var(--text-muted); margin-top:3px; }
+  .wiz-result {
+    margin-top:16px; padding:14px; border-radius:10px;
+    background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:1px solid #a5d6a7;
+    font-size:13px; color:#1b5e20;
+  }
+  [data-theme="dark"] .wiz-result { background:linear-gradient(135deg,#0d2a1f,#1a4a35); color:#66cc99; border-color:#1E9F7F; }
+  .wiz-result strong { font-size:14px; }
+  .wiz-nav-btn {
+    display:inline-block; margin-top:10px; padding:8px 20px; border-radius:8px;
+    background:var(--rumo-blue); color:white; border:none; font-weight:700;
+    font-size:12.5px; cursor:pointer; transition:background .15s;
+  }
+  .wiz-nav-btn:hover { background:var(--rumo-blue-light); }
+
+  /* ===== DEADLINE CALC MODAL ===== */
+  .dl-row { display:flex; align-items:center; gap:10px; margin:6px 0; }
+  .dl-row label { font-size:12.5px; font-weight:600; flex:0 0 220px; color:var(--text); }
+  .dl-row input[type="date"] {
+    padding:5px 8px; border-radius:6px; border:1px solid var(--border);
+    font-size:12.5px; background:var(--card); color:var(--text);
+  }
+  .dl-results { margin-top:14px; }
+  .dl-item { display:flex; justify-content:space-between; padding:6px 10px; border-radius:6px; margin:3px 0; font-size:12.5px; }
+  .dl-item:nth-child(odd) { background:rgba(0,0,0,.03); }
+  [data-theme="dark"] .dl-item:nth-child(odd) { background:rgba(255,255,255,.04); }
+  .dl-item .dl-name { color:var(--text-muted); }
+  .dl-item .dl-date { font-weight:700; color:var(--color-critical); }
+
+  /* ===== BACK TO TOP ===== */
+  .back-top {
+    position:fixed; bottom:20px; right:20px; width:40px; height:40px;
+    border-radius:50%; background:var(--rumo-blue); color:white; border:none;
+    font-size:18px; cursor:pointer; box-shadow:0 3px 12px rgba(0,0,0,.3);
+    display:none; align-items:center; justify-content:center; z-index:90;
+    transition:opacity .2s;
+  }
+  .back-top.show { display:flex; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width:7px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:#D7E0E5; border-radius:10px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:700px) {
+    /* Header: grid para organizar em 2 linhas */
+    .header-top {
+      padding:8px 12px; gap:6px;
+      display:grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: auto auto;
+      align-items:center;
+    }
+    .header-logo { grid-column:1; grid-row:1; }
+    .logo-img { width:88px; }
+    .header-title { grid-column:2; grid-row:1; padding-left:6px; min-width:0; overflow:hidden; }
+    .header-title h1 { font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .header-title p { display:none; }
+    .header-controls { grid-column:3; grid-row:1; gap:4px; flex-wrap:nowrap; }
+    .hdr-btn { padding:6px 8px; font-size:14px; gap:0; }
+    .btn-label { display:none; }
+    /* Search bar: ocupa linha inteira abaixo */
+    .search-bar { grid-column:1 / -1; grid-row:2; flex:unset; width:100%; }
+    /* Nav tabs: scroll horizontal sem scrollbar visível */
+    .nav-tabs { overflow-x:auto; scrollbar-width:none; }
+    .nav-tabs::-webkit-scrollbar { display:none; }
+    .nav-tab { padding:8px 12px; font-size:11px; letter-spacing:0; flex-shrink:0; }
+    /* Main */
+    main { padding:10px 8px 70px; }
+    /* Toolbar */
+    .toolbar { padding:6px 8px; gap:5px; overflow-x:auto; flex-wrap:nowrap; }
+    .toolbar-sep, .toolbar-label { display:none; }
+    .tb-btn { flex-shrink:0; }
+    /* Section header */
+    .section-header { font-size:12.5px; padding:10px 12px; }
+    /* Steps */
+    .step { padding:8px 10px; gap:8px; }
+    .step-num { width:22px; height:22px; font-size:10px; flex-shrink:0; }
+    .step-title { font-size:12px; }
+    .step-desc { font-size:11.5px; }
+    /* Overview */
+    .overview-card { flex-direction:column; gap:8px; }
+    .overview-icon { font-size:22px; }
+    /* Decisions */
+    .decision-opt { min-width:100%; }
+    /* 2-col grid → 1 col */
+    .grid-2 { grid-template-columns:1fr; }
+    /* Modal */
+    .modal { width:calc(100vw - 20px); max-height:88vh; padding:16px 14px; }
+    /* Deadline form */
+    .dl-row { flex-wrap:wrap; }
+    .dl-row label { flex:1 0 100%; }
+    /* Back to top */
+    .back-top { width:44px; height:44px; font-size:18px; bottom:14px; right:10px; }
+  }
+
+  @media (max-width:320px) {
+    .header-title { display:none; }
+    .logo-img { width:70px; }
+    .nav-tab { padding:6px 8px; font-size:10px; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    header, .toolbar, .back-top, .copy-btn, .hdr-btn, .search-bar { display:none !important; }
+    .section-body { display:block !important; }
+    .tab-pane { display:block !important; page-break-before:always; }
+    body { background:white; color:black; font-size:11px; }
+    .step { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="header-top">
+    <div class="header-logo"><img src="https://brandbook.rumolog.com/assets/img/logo.png" alt="RUMO Logo" class="logo-img"></div>
+    <div class="header-title">
+      <h1>Guia Interativo de Licenciamento Ambiental</h1>
+      <p>Fluxograma LP · LI · LO — Gestão de Meio Ambiente · REV02</p>
+    </div>
+    <div class="search-bar">
+      <span style="opacity:.6">&#128269;</span>
+      <input id="searchInput" type="text" placeholder="Buscar... (ex: PAIPA, outorga, TRP)">
+      <span class="search-count" id="searchCount">
+        <button class="search-nav" id="searchPrev" disabled>&#8593;</button>
+        <span id="searchCountText"></span>
+        <button class="search-nav" id="searchNext" disabled>&#8595;</button>
+      </span>
+    </div>
+    <div class="header-controls">
+      <button class="hdr-btn" onclick="openWizard()" title="Assistente de rota guiada" aria-label="Abrir assistente de rota guiada">&#9881;<span class="btn-label"> Assistente</span></button>
+      <button class="hdr-btn" onclick="openDeadlineCalc()" title="Calculadora de prazos legais" aria-label="Abrir calculadora de prazos">&#9200;<span class="btn-label"> Prazos</span></button>
+      <button class="hdr-btn" id="darkBtn" onclick="toggleDark()" title="Modo escuro (Alt+D)" aria-label="Alternar modo escuro" aria-pressed="false">&#9790;<span class="btn-label"> Escuro</span></button>
+      <button class="hdr-btn" id="compactBtn" onclick="toggleCompact()" title="Modo compacto (Alt+C)" aria-label="Alternar modo compacto" aria-pressed="false">&#9776;<span class="btn-label"> Compacto</span></button>
+      <button class="hdr-btn" id="shortcutsBtn" onclick="toggleShortcutsHelp()" title="Atalhos de teclado (?)" aria-label="Ver atalhos de teclado" aria-expanded="false">?<span class="btn-label"> Atalhos</span></button>
+      <div class="shortcuts-panel" id="shortcutsPanel" role="tooltip" aria-label="Atalhos de teclado">
+        <h4>Atalhos de teclado</h4>
+        <div class="shortcut-row"><span>Abrir busca</span><kbd>Ctrl K</kbd></div>
+        <div class="shortcut-row"><span>Próxima aba</span><kbd>Alt →</kbd></div>
+        <div class="shortcut-row"><span>Aba anterior</span><kbd>Alt ←</kbd></div>
+        <div class="shortcut-row"><span>Modo escuro</span><kbd>Alt D</kbd></div>
+        <div class="shortcut-row"><span>Modo compacto</span><kbd>Alt C</kbd></div>
+        <div class="shortcut-row"><span>Expandir tudo</span><kbd>Alt E</kbd></div>
+        <div class="shortcut-row"><span>Recolher tudo</span><kbd>Alt R</kbd></div>
+        <div class="shortcut-row"><span>Fechar modal</span><kbd>Esc</kbd></div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-tabs" id="navTabs" role="tablist" aria-label="Fases de licenciamento">
+    <div class="nav-tab active" role="tab" aria-selected="true" aria-controls="tab-lp" tabindex="0" data-tab="lp" onclick="showTab('lp',this)">&#x1F7E6; LP — Prévia</div>
+    <div class="nav-tab" role="tab" aria-selected="false" aria-controls="tab-li" tabindex="-1" data-tab="li" onclick="showTab('li',this)">&#x1F7E9; LI — Instalação</div>
+    <div class="nav-tab" role="tab" aria-selected="false" aria-controls="tab-li-implant" tabindex="-1" data-tab="li-implant" onclick="showTab('li-implant',this)">&#x1F7E7; LI — Implantação</div>
+    <div class="nav-tab" role="tab" aria-selected="false" aria-controls="tab-lo" tabindex="-1" data-tab="lo" onclick="showTab('lo',this)">&#x1F7E8; LO — Operação</div>
+    <div class="nav-tab" role="tab" aria-selected="false" aria-controls="tab-conama" tabindex="-1" data-tab="conama" onclick="showTab('conama',this)">&#128203; CONAMA 479</div>
+  </div>
+</header>
+
+<!-- ============ WIZARD MODAL ============ -->
+<div class="modal-overlay" id="wizardModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeWizard()">&times;</button>
+    <h2>&#9881; Assistente de Rota</h2>
+    <p class="sub">Responda as perguntas abaixo e a interface destacará apenas as etapas relevantes ao seu projeto.</p>
+    <div id="wizardContent">
+      <div class="wiz-q">1. O empreendimento intercepta mais de um Estado?</div>
+      <div class="wiz-opts">
+        <div class="wiz-opt" onclick="wizSelect(0,'inter','sim',this)">SIM<small>Licenciamento Federal (IBAMA)</small></div>
+        <div class="wiz-opt" onclick="wizSelect(0,'inter','nao',this)">NÃO<small>Licenciamento Estadual</small></div>
+      </div>
+      <div id="wiz-step1" style="display:none">
+        <div class="wiz-q">2. Qual o estado do empreendimento?</div>
+        <div class="wiz-opts">
+          <div class="wiz-opt" onclick="wizSelect(1,'estado','mt',this)">Mato Grosso<small>SEMA-MT</small></div>
+          <div class="wiz-opt" onclick="wizSelect(1,'estado','sp',this)">São Paulo<small>CETESB-SP</small></div>
+        </div>
+      </div>
+      <div id="wiz-step2" style="display:none">
+        <div class="wiz-q">3. Tipo de empreendimento?</div>
+        <div class="wiz-opts">
+          <div class="wiz-opt" onclick="wizSelect(2,'tipo','novo',this)">Novo Empreendimento<small>Rito trifásico completo</small></div>
+          <div class="wiz-opt" onclick="wizSelect(2,'tipo','reg',this)">Regularização / Melhoramento<small>CONAMA 479/2017</small></div>
+          <div class="wiz-opt" onclick="wizSelect(2,'tipo','emerg',this)">Emergência / Urgência<small>CONAMA 479/2017</small></div>
+        </div>
+      </div>
+      <div id="wiz-step3" style="display:none">
+        <div class="wiz-q">4. Em qual fase está o projeto?</div>
+        <div class="wiz-opts">
+          <div class="wiz-opt" onclick="wizSelect(3,'fase','lp',this)">LP — Prévia<small>Viabilidade</small></div>
+          <div class="wiz-opt" onclick="wizSelect(3,'fase','li',this)">LI — Instalação<small>Autorização de obras</small></div>
+          <div class="wiz-opt" onclick="wizSelect(3,'fase','lo',this)">LO — Operação<small>Autorização para operar</small></div>
+        </div>
+      </div>
+      <div id="wizResult" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DEADLINE CALC MODAL ============ -->
+<div class="modal-overlay" id="deadlineModal">
+  <div class="modal" style="max-width:620px">
+    <button class="modal-close" onclick="closeDeadlineCalc()">&times;</button>
+    <h2>&#9200; Calculadora de Prazos Legais</h2>
+    <p class="sub">Insira a data de protocolo e veja os prazos legais calculados automaticamente.</p>
+    <div class="dl-row">
+      <label>Data de protocolo / instauração:</label>
+      <input type="date" id="dlDate" onchange="calcDeadlines()">
+    </div>
+    <div class="dl-results" id="dlResults" style="display:none">
+      <div style="font-weight:700; font-size:13px; margin-bottom:8px; color:var(--text);">Prazos calculados:</div>
+      <div id="dlItems"></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- ===================== TAB LP ===================== -->
+<div id="tab-lp" class="tab-pane active">
+
+  <div class="toolbar">
+    <span class="toolbar-label">Filtrar:</span>
+    <button class="tb-btn active" onclick="filterOrgan('lp','all',this)">Todos</button>
+    <button class="tb-btn ibama" onclick="filterOrgan('lp','ibama',this)">IBAMA</button>
+    <button class="tb-btn sema" onclick="filterOrgan('lp','sema',this)">SEMA</button>
+    <button class="tb-btn iphan" onclick="filterOrgan('lp','iphan',this)">IPHAN</button>
+    <div class="toolbar-sep"></div>
+    <button class="tb-btn" onclick="toggleAll('lp','expand')">&#9660; Expandir tudo</button>
+    <button class="tb-btn" onclick="toggleAll('lp','collapse')">&#9650; Recolher tudo</button>
+  </div>
+
+  <div class="overview-card">
+    <div class="overview-icon">&#x1F535;</div>
+    <div>
+      <h2>Licença Prévia (<span class="glossary" data-tip="Licença Prévia — aprova a viabilidade ambiental e locacional do empreendimento">LP</span>) — Viabilidade do Empreendimento</h2>
+      <p>A LP aprova a localização e concepção do empreendimento, atestando a viabilidade ambiental e estabelecendo os requisitos básicos e condicionantes para as próximas fases. Deve ser obtida <strong>antes de qualquer obra</strong>.</p>
+      <div class="overview-tags">
+        <span class="tag tag-ibama" data-filter="ibama" role="button" tabindex="0" title="Filtrar por IBAMA">IBAMA (Federal)</span>
+        <span class="tag tag-sema" data-filter="sema" role="button" tabindex="0" title="Filtrar por SEMA">SEMA-MT (Estadual)</span>
+        <span class="tag tag-cetesb" data-filter="cetesb" role="button" tabindex="0" title="Filtrar por CETESB">CETESB-SP (Estadual)</span>
+        <span class="tag tag-iphan" data-filter="iphan" role="button" tabindex="0" title="Filtrar por IPHAN">IPHAN (Paralelo)</span>
+        <span class="tag tag-warn">EIA/RIMA obrigatório</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÉ-LICENCIAMENTO -->
+  <div class="section-group section-prelicen" data-organ="prelicen">
+    <div class="section-header" onclick="toggleSection(this)">
+      &#127959;&#65039; ETAPA PRÉ-LICENCIAMENTO AMBIENTAL
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step" data-id="lp-pre-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Elaboração de Projeto Conceitual de Engenharia</div><div class="step-desc">Desenvolver memorial descritivo, arquivos vetoriais (shp, kmz, dwg) e estudo de alternativas tecnológicas e locacionais.</div><div class="step-meta"><span class="meta-rumo">RUMO</span><span class="meta-doc">Arquivos vetoriais</span><span class="meta-doc">Memorial descritivo</span></div></div></div>
+
+        <div class="step" data-id="lp-pre-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Análise do Projeto pelo Setor de Meio Ambiente</div><div class="step-desc">Verificar: Portaria Interministerial nº60/2015, interferências em Comunidades Tradicionais (<span class="glossary" data-tip="Organização Internacional do Trabalho — Convenção nº169 sobre Povos Indígenas e Tribais">OIT</span> nº169), <span class="glossary" data-tip="Área de Preservação Permanente">APP</span> e <span class="glossary" data-tip="Unidade de Conservação">UC</span>.</div><div class="step-meta"><span class="meta-warn">Comunidades Tradicionais</span><span class="meta-warn">APP / UC</span></div></div></div>
+
+        <div class="decision-block">
+          <div class="decision-q">&#10067; O empreendimento intercepta mais de um Estado?</div>
+          <div class="decision-options">
+            <div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Órgão competente: <strong>IBAMA</strong> (federal)</p></div>
+            <div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Órgão competente: <strong>Órgão Estadual</strong> (SEMA-MT ou CETESB-SP)</p><p style="margin-top:3px;font-size:11px;">Bens tombados: CONDEPHAAT (SP) / SETEL (MT)</p></div>
+          </div>
+        </div>
+
+        <div class="step" data-id="lp-pre-3"><div class="step-num decision">3</div><div class="step-content"><div class="step-title">Empreendedor cadastrado no IBAMA?</div><div class="step-desc">Verificar cadastro. Se não cadastrado, realizar o cadastro antes de prosseguir com a <span class="glossary" data-tip="Ficha de Caracterização da Atividade — formulário para iniciar o processo de licenciamento">FCA</span>.</div><div class="step-meta"><span class="meta-warn">Se NÃO → Cadastrar primeiro</span></div></div></div>
+
+        <div class="step" data-id="lp-pre-4"><div class="step-num doc">4</div><div class="step-content"><div class="step-title">Preencher a <span class="glossary" data-tip="Ficha de Caracterização da Atividade">FCA</span></div><details><summary>Ver documentos necessários para FCA</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Documentos para FCA</h4><ul><li>Dados do Responsável Técnico</li><li>Dados do Empreendedor</li><li>Dados do empreendimento</li><li>Caracterização do empreendimento (elementos, atividade, localização)</li><li>Hidrografia da área de estudo</li><li>Áreas minerárias</li><li>Municípios abrangidos</li><li>Terras indígenas, quilombolas e comunidades tradicionais</li><li>Unidades de Conservação</li><li>APP (Área de Preservação Permanente)</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-pre-5"><div class="step-num rumo">5</div><div class="step-content"><div class="step-title">Protocolo da FCA no Órgão Ambiental</div><div class="step-desc">Protocolar a FCA. O IBAMA terá 10 dias úteis para instaurar o processo e gerar nº SEI/IBAMA.</div><div class="step-meta"><span class="meta-deadline">10 dias úteis p/ instaurar</span></div></div></div>
+
+        <div class="step" data-id="lp-pre-6"><div class="step-num ibama">6</div><div class="step-content"><div class="step-title">Análise de Competência pelo IBAMA</div><div class="step-desc">IBAMA verifica se é competência sua ou de órgão estadual.</div><div class="step-meta"><span class="meta-organ">IBAMA</span></div></div></div>
+
+        <div class="step" data-id="lp-pre-7"><div class="step-num ibama">7</div><div class="step-content"><div class="step-title">Processo Instaurado + Publicação do Requerimento</div><div class="step-desc">IBAMA instaura o processo. A partir daí, 60 dias corridos para emitir o <span class="glossary" data-tip="Termo de Referência — documento que define o escopo dos estudos ambientais">TR</span>.</div><div class="step-meta"><span class="meta-deadline">60 dias corridos p/ emitir TR</span><span class="meta-organ">IBAMA</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IBAMA LP -->
+  <div class="section-group section-ibama" data-organ="ibama">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="organ-badge ibama" style="margin:0;padding:2px 8px;font-size:10.5px;">IBAMA</span>
+      PROCESSO LP — IBAMA (Rito Trifásico)
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="decision-block">
+          <div class="decision-q">&#10067; Análise do tipo de enquadramento</div>
+          <div class="decision-options">
+            <div class="decision-opt"><div class="opt-label opt-ibama">CONAMA 479/2017</div><p>Regularização, Melhoramento, Ampliação na faixa de domínio → Ver aba CONAMA 479</p></div>
+            <div class="decision-opt"><div class="opt-label opt-ibama">Rito Trifásico</div><p>Novo empreendimento → Segue fluxo LP/LI/LO completo</p></div>
+          </div>
+        </div>
+
+        <div class="step" data-id="lp-ib-1"><div class="step-num ibama">1</div><div class="step-content"><div class="step-title">Emissão do <span class="glossary" data-tip="Termo de Referência">TR</span> pelo IBAMA</div><div class="step-desc">Prazo: 60 dias corridos a partir da instauração.</div><div class="step-meta"><span class="meta-deadline">60 dias corridos</span><span class="meta-organ">IBAMA emite</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Contratação de Consultoria (Suprimentos)</div><div class="step-desc">Especificação técnica e contratação da consultoria para <span class="glossary" data-tip="Estudo de Impacto Ambiental / Relatório de Impacto Ambiental">EIA/RIMA</span>.</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-3"><div class="step-num rumo">3</div><div class="step-content"><div class="step-title">Mobilização da Equipe + Autorizações Prévias</div><div class="step-desc">Mobilizar equipe (SSO), obter Autorização de Coleta, Captura e Transporte de Material Biológico, comunicar proprietários.</div><div class="step-meta"><span class="meta-doc">Autorização de Coleta/Captura</span><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-4"><div class="step-num rumo">4</div><div class="step-content"><div class="step-title">Elaboração do Estudo Ambiental (<span class="glossary" data-tip="Estudo de Impacto Ambiental / Relatório de Impacto Ambiental">EIA/RIMA</span>)</div><div class="step-desc">Estudos de campo e escritório conforme o TR.</div><div class="step-meta"><span class="meta-rumo">RUMO + Consultoria</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-5"><div class="step-num doc">5</div><div class="step-content"><div class="step-title">Conferência Interna + Revisão pelo Meio Ambiente</div><div class="step-desc">Checklist do TR. Revisão pela equipe interna e consultoria.</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-6"><div class="step-num doc">6</div><div class="step-content"><div class="step-title">Juntada de Documentos + Protocolo do EIA/RIMA</div><div class="step-desc">Protocolar no IBAMA para solicitar a LP.</div><div class="step-meta"><span class="meta-rumo">RUMO</span><span class="meta-doc">EIA/RIMA completo</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-7"><div class="step-num ibama">7</div><div class="step-content"><div class="step-title">Avaliação Formal (Checklist) do EIA/RIMA pelo IBAMA</div><div class="step-desc">30 dias corridos para conferir se atende ao TR.</div><div class="step-meta"><span class="meta-deadline">30 dias corridos</span><span class="meta-organ">IBAMA</span><span class="meta-warn">Se não atende → Complementações</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-8"><div class="step-num ibama">8</div><div class="step-content"><div class="step-title">Audiência Pública</div><div class="step-desc">Agendada em até 45 dias após publicação no <span class="glossary" data-tip="Diário Oficial da União">DOU</span>.</div><div class="step-meta"><span class="meta-deadline">até 45 dias após DOU</span><span class="meta-organ">IBAMA organiza</span><span class="meta-rumo">RUMO participa</span></div></div></div>
+
+        <div class="step" data-id="lp-ib-9"><div class="step-num ibama">9</div><div class="step-content"><div class="step-title">Análise Técnica pelo IBAMA</div><div class="step-desc">Prazo máximo para decisão: 12 meses a partir do protocolo (EIA).</div><div class="step-meta"><span class="meta-deadline">Prazo máximo: 12 meses</span><span class="meta-organ">IBAMA</span></div></div></div>
+
+        <div class="decision-block">
+          <div class="decision-q">&#10067; LP foi deferida?</div>
+          <div class="decision-options">
+            <div class="decision-opt"><div class="opt-label opt-yes">SIM — LP Deferida</div><p>Pagamento das taxas + Emissão da LP + Publicação no DOU</p><p style="margin-top:3px;color:#1E9F7F;font-weight:600;">→ Avançar para etapa de LI</p></div>
+            <div class="decision-opt"><div class="opt-label opt-no">NÃO — Indeferida</div><p>Processo arquivado. Avaliar recurso ou novo pedido.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMA LP -->
+  <div class="section-group section-sema" data-organ="sema">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="organ-badge sema" style="margin:0;padding:2px 8px;font-size:10.5px;">SEMA-MT</span>
+      PROCESSO LP — SEMA-MT (Mato Grosso)
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="decision-block">
+          <div class="decision-q">&#10067; Tipo de Licenciamento — Decreto MT 1.585/2022</div>
+          <div class="decision-options">
+            <div class="decision-opt"><div class="opt-label" style="color:#9F4BB9;">Anexo II — Trifásico</div><p>Processo completo LP → LI → LO com EIA/RIMA</p></div>
+            <div class="decision-opt"><div class="opt-label" style="color:#00695c;">Anexo III — <span class="glossary" data-tip="Licenciamento Ambiental Simplificado">LAS</span></div><p>Licenciamento Ambiental Simplificado</p></div>
+            <div class="decision-opt"><div class="opt-label" style="color:#32A6E6;">Anexo IV — <span class="glossary" data-tip="Licenciamento por Adesão e Compromisso">LAC</span></div><p>Licenciamento por Adesão e Compromisso</p></div>
+          </div>
+        </div>
+
+        <div class="step" data-id="lp-se-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Preencher o Requerimento Padrão (SEMA)</div><div class="step-desc">E-mail para taxa: <strong>arrecadacao@sema.mt.gov.br</strong></div><details><summary>Ver documentos para Requerimento Padrão</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Documentos</h4><ul><li>Documentos para cadastro do empreendedor</li><li>Documento do responsável técnico</li><li>Dados do empreendimento</li><li>Comprovante de pagamento da Guia</li><li>Documentos do TRP nº01</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-se-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Protocolo de Documentos Impressos na SEMA</div><div class="step-desc">Publicação resumida do requerimento no Diário Oficial do Estado e imprensa local.</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-se-3"><div class="step-num sema">3</div><div class="step-content"><div class="step-title">SEMA emite o <span class="glossary" data-tip="Termo de Referência">TR</span></div><div class="step-desc">SEMA tem 45 dias para emitir o TR em caso de EIA/RIMA.</div><div class="step-meta"><span class="meta-deadline">45 dias para emissão do TR</span><span class="meta-organ">SEMA</span></div></div></div>
+
+        <div class="step" data-id="lp-se-4"><div class="step-num rumo">4</div><div class="step-content"><div class="step-title">Início dos Estudos + Autorizações Prévias</div><div class="step-desc">Contratação de consultoria, Autorização de Manejo de Fauna (<span class="glossary" data-tip="Termo de Referência Padrão">TRP</span> nº178), comunicação com proprietários.</div><div class="step-meta"><span class="meta-doc">TRP nº178</span><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-se-5"><div class="step-num rumo">5</div><div class="step-content"><div class="step-title">Elaboração + Conferência + Protocolo do EIA/RIMA</div><div class="step-desc">Verificar Avaliação do Potencial Malarígeno. Atender TRP nº125, TRP nº01 e Estudo Ambiental.</div><div class="step-meta"><span class="meta-warn">Avaliação do Potencial Malarígeno</span><span class="meta-doc">TRP nº125 + TRP nº01</span></div></div></div>
+
+        <div class="step" data-id="lp-se-6"><div class="step-num sema">6</div><div class="step-content"><div class="step-title">Avaliação Formal do EIA/RIMA pela SEMA (Checklist)</div><div class="step-desc">30 dias corridos para verificar. Complementações: empreendedor tem 90 dias.</div><div class="step-meta"><span class="meta-deadline">30 dias corridos</span><span class="meta-warn">Complementações: 90 dias</span></div></div></div>
+
+        <div class="step" data-id="lp-se-7"><div class="step-num sema">7</div><div class="step-content"><div class="step-title">Audiência Pública</div><div class="step-desc">SEMA publica a data com no mínimo 45 dias de antecedência.</div><div class="step-meta"><span class="meta-deadline">45 dias de antecedência</span><span class="meta-organ">SEMA organiza</span></div></div></div>
+
+        <div class="info-box warn"><strong>Atenção:</strong> Consulta a CONDEPHAAT-SP / SETEL-MT para bens tombados somente se houver interferência levantada na Fase de LP.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IPHAN LP -->
+  <div class="section-group section-iphan" data-organ="iphan">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="organ-badge iphan" style="margin:0;padding:2px 8px;font-size:10.5px;">IPHAN</span>
+      PROCESSO ARQUEOLOGIA — Paralelo ao LP/LI/LO
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="info-box info"><strong>O processo do IPHAN corre PARALELAMENTE ao processo no Órgão Ambiental.</strong></div>
+      <div class="steps">
+        <div class="step" data-id="lp-ip-1"><div class="step-num doc">1</div><div class="step-content"><div class="step-title">Abertura de Processo no IPHAN via <span class="glossary" data-tip="Sistema de Acompanhamento de Informação Prévia — portal do IPHAN">SAIP</span> ou FCA Física</div><div class="step-desc">IPHAN tem 15 dias para análise física da FCA (ou automática pelo SAIP).</div><details><summary>Ver documentos FCA IPHAN</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Documentos FCA IPHAN</h4><ul><li>Documentos de cadastro do empreendedor</li><li>Protocolo da FCA</li><li>Documento do responsável técnico (ART)</li><li>Shapefile e mapas</li><li>Projeto de Engenharia</li></ul></div></div></details><div class="step-meta"><span class="meta-deadline">IPHAN: 15 dias para análise</span></div></div></div>
+
+        <div class="step" data-id="lp-ip-2"><div class="step-num iphan">2</div><div class="step-content"><div class="step-title">IPHAN emite o <span class="glossary" data-tip="Termo de Referência Específico">TRE</span></div><div class="step-desc">Centro Nacional de Arqueologia do IPHAN.</div><div class="step-meta"><span class="meta-organ">IPHAN</span></div></div></div>
+
+        <div class="step" data-id="lp-ip-3"><div class="step-num rumo">3</div><div class="step-content"><div class="step-title">Contratação de Consultoria + Elaboração do <span class="glossary" data-tip="Projeto de Avaliação de Impacto ao Patrimônio Arqueológico">PAIPA</span></div><div class="step-desc">Mobilização da equipe (SSO).</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="lp-ip-4"><div class="step-num iphan">4</div><div class="step-content"><div class="step-title">Avaliação do PAIPA pelo IPHAN → Emissão da Portaria</div><div class="step-desc">Prazo de 30 dias para análise. Emissão de Portaria autorizando campo.</div><div class="step-meta"><span class="meta-deadline">30 dias para análise do PAIPA</span><span class="meta-organ">IPHAN</span></div></div></div>
+
+        <div class="step" data-id="lp-ip-5"><div class="step-num rumo">5</div><div class="step-content"><div class="step-title">Prospecção Arqueológica em Campo</div><div class="step-desc">Se exceder prazo da Portaria → Solicitar renovação via Ofício.</div><div class="step-meta"><span class="meta-warn">Se exceder prazo → renovação via Ofício</span></div></div></div>
+
+        <div class="step" data-id="lp-ip-6"><div class="step-num rumo">6</div><div class="step-content"><div class="step-title">Elaboração + Protocolo do <span class="glossary" data-tip="Relatório de Avaliação de Impacto ao Patrimônio Arqueológico">RAIPA</span></div><div class="step-desc">IPHAN: 30 dias para análise.</div><div class="step-meta"><span class="meta-deadline">30 dias para análise do RAIPA</span></div></div></div>
+
+        <div class="decision-block">
+          <div class="decision-q">&#10067; Resultado da análise do RAIPA pelo IPHAN</div>
+          <div class="decision-options">
+            <div class="decision-opt"><div class="opt-label opt-yes">SEM sítios na <span class="glossary" data-tip="Área Diretamente Afetada">ADA</span></div><p><strong>Anuência para LP, LI e LO</strong> em única manifestação</p></div>
+            <div class="decision-opt"><div class="opt-label opt-no">COM sítios na ADA</div><p>IPHAN emite anuência apenas para LP e condiciona PGPA + <span class="glossary" data-tip="Programa Integrado de Educação Patrimonial">PIEP</span></p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-lp -->
+
+
+<!-- ===================== TAB LI ===================== -->
+<div id="tab-li" class="tab-pane">
+
+  <div class="toolbar">
+    <span class="toolbar-label">Filtrar:</span>
+    <button class="tb-btn active" onclick="filterOrgan('li','all',this)">Todos</button>
+    <button class="tb-btn ibama" onclick="filterOrgan('li','ibama',this)">IBAMA</button>
+    <button class="tb-btn sema" onclick="filterOrgan('li','sema',this)">SEMA</button>
+    <button class="tb-btn cetesb" onclick="filterOrgan('li','cetesb',this)">CETESB</button>
+    <div class="toolbar-sep"></div>
+    <button class="tb-btn" onclick="toggleAll('li','expand')">&#9660; Expandir</button>
+    <button class="tb-btn" onclick="toggleAll('li','collapse')">&#9650; Recolher</button>
+  </div>
+
+  <div class="overview-card">
+    <div class="overview-icon">&#x1F7E9;</div>
+    <div>
+      <h2>Licença de Instalação (<span class="glossary" data-tip="Licença de Instalação — autoriza a instalação/construção do empreendimento">LI</span>) — Autorização para Obras</h2>
+      <p>A LI autoriza a instalação, confirmando atendimento às condicionantes da LP e aprovando o <span class="glossary" data-tip="Plano Básico Ambiental">PBA</span>. Só pode ser requerida após a <strong>obtenção da LP</strong>.</p>
+      <div class="overview-tags"><span class="tag tag-ibama">IBAMA</span><span class="tag tag-sema">SEMA-MT</span><span class="tag tag-cetesb">CETESB-SP</span><span class="tag tag-iphan">IPHAN</span><span class="tag tag-warn">PBA obrigatório</span></div>
+    </div>
+  </div>
+
+  <!-- LI IBAMA -->
+  <div class="section-group section-ibama" data-organ="ibama">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="organ-badge ibama" style="margin:0;padding:2px 8px;font-size:10.5px;">IBAMA</span>
+      ETAPA DE SOLICITAÇÃO DE LI — IBAMA
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step" data-id="li-ib-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Relatório de Atendimento das Condicionantes da LP</div><div class="step-desc">Demonstrar cumprimento de todas as condicionantes da LP.</div><div class="step-meta"><span class="meta-rumo">RUMO + Consultoria</span></div></div></div>
+
+        <div class="step" data-id="li-ib-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Elaboração do Projeto Executivo de Engenharia</div><details><summary>Ver mínimos entregáveis de Engenharia para LI</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Mínimos entregáveis — LI</h4><ul><li>00 - Memorial Descritivo</li><li>01 - Projeto Geométrico</li><li>02 - Projeto de Interferências</li><li>03 - Projeto de Acessos</li><li>04 - Projeto de Drenagem</li><li>05 - Projeto de OAE</li><li>06 - Projeto de Terraplenagem</li><li>07 - Plano de Desmonte de Rocha</li><li>08 - Jazidas</li><li>09 - Relatório do Projeto Executivo</li><li>10 - Plano de Execução</li><li>11 - Proj. Sinalização Ferroviária</li><li>12 - Proj. Sinalização Viária</li><li>14 - Plano de Transporte</li><li>18 - Efluente Industrial</li><li>19 - Resíduos</li><li>23 - Passagem de Fauna</li><li>25 - Investimento</li><li>26 - ART</li><li>27 - Cadastro Técnico SEMA-MT</li><li>29 - KMZ</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO + Engenharia</span></div></div></div>
+
+        <div class="step" data-id="li-ib-3"><div class="step-num rumo">3</div><div class="step-content"><div class="step-title">Elaboração do <span class="glossary" data-tip="Plano de Controle Ambiental / Plano Básico Ambiental">PCA/PBA</span></div><div class="step-desc">Detalhar programas ambientais conforme EIA e pareceres do IBAMA.</div><details><summary>Ver estrutura mínima do PBA (IN IBAMA 184/2008)</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Itens do PGA/PBA</h4><ul><li>Responsáveis pela elaboração e implantação</li><li>Objetivo, legislação e escopo</li><li>Materiais e métodos — medidas ambientais</li><li>Avaliação, monitoramento e cronograma</li><li>Apêndice A: planilha aspecto/impacto x medidas</li><li>Apêndice B: planilha orçamento por período</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO + Consultoria</span><span class="meta-doc">IN IBAMA nº184/2008</span></div></div></div>
+
+        <div class="info-box info" style="margin:6px 0;"><strong>Verificar necessidade dos processos paralelos abaixo antes de protocolar a LI:</strong></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Haverá Supressão de Vegetação?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Obter <strong><span class="glossary" data-tip="Autorização de Supressão de Vegetação">ASV</span></strong> + Manejo de Fauna para resgate + Coleta de Material Botânico</p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Processo não iniciado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Necessita captação de água (Federal)?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Cadastrar no SNIRH via <span class="glossary" data-tip="Sistema Federal de Regulação de Usos de Recursos Hídricos">REGLA</span>. <span class="glossary" data-tip="Agência Nacional de Águas">ANA</span> tem 120 dias para manifestação.</p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Processo encerrado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Órgão de Saúde solicitou <span class="glossary" data-tip="Plano de Ação de Controle de Malária">PACM</span>?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Elaborar PACM → Obter <span class="glossary" data-tip="Atestado de Condição Sanitária">ATCS</span></p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Processo encerrado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Dentro de <span class="glossary" data-tip="Unidade de Conservação">UC</span>?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Solicitar anuência do <span class="glossary" data-tip="Instituto Chico Mendes de Conservação da Biodiversidade">ICMBio</span></p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Não iniciado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Intervenção em cavidades naturais?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Patrimônio espeleológico → TR IBAMA → Inventário → Análise</p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Não iniciado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Intervenção em comunidade indígena ou quilombola?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Indígena → <span class="glossary" data-tip="Fundação Nacional dos Povos Indígenas">FUNAI</span> / Quilombola → <span class="glossary" data-tip="Instituto Nacional de Colonização e Reforma Agrária">INCRA</span></p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Não iniciado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Intervenção em sítio arqueológico?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p><span class="glossary" data-tip="Programa de Gestão do Patrimônio Arqueológico">PGPA</span> + PIEP → IPHAN (30d) → Portaria → Salvamento → Anuência LI/LO</p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Anuência direta do RAIPA anterior</p></div></div></div>
+
+        <div class="step" data-id="li-ib-9"><div class="step-num doc">9</div><div class="step-content"><div class="step-title">Organização e Protocolo da LI no SISG-LAF</div><details><summary>Ver documentos para protocolo</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Documentos LI (IBAMA)</h4><ul><li>Documentos de atendimento à LP</li><li>PBA</li><li>Estudos complementares</li><li>Licenças, autorizações e anuências</li><li>Publicação no DOU e jornais</li><li>Pagamento de taxas</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="li-ib-10"><div class="step-num ibama">10</div><div class="step-content"><div class="step-title">Análise pelo IBAMA → <span class="glossary" data-tip="Parecer Técnico Conclusivo">PTC</span></div><div class="step-desc">Prazo: 75 dias para análise do PBA. Máximo 12 meses (EIA). Empreendedor tem 4 meses para esclarecimentos.</div><div class="step-meta"><span class="meta-deadline">75 dias para análise do PBA</span><span class="meta-deadline">Máximo: 12 meses</span></div></div></div>
+
+        <div class="step" data-id="li-ib-11"><div class="step-num ibama">11</div><div class="step-content"><div class="step-title">Projeto de Compensação Ambiental</div><div class="step-desc">Direcionar recursos para criação/manutenção de UCs. Emissão do <span class="glossary" data-tip="Termo de Compromisso de Compensação Ambiental">TCCA</span>.</div><div class="step-meta"><span class="meta-doc">Lei 9.985/2000 + Decretos 4.340/2002 e 6.848/2009</span></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Documentação atendeu?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">DEFERIU</div><p>DOU + Emissão da LI</p><p style="color:#1E9F7F;font-weight:600;margin-top:3px;">→ Avançar para Implantação</p></div><div class="decision-opt"><div class="opt-label opt-no">INDEFERIU</div><p>Encerramento do processo</p></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LI SEMA -->
+  <div class="section-group section-sema" data-organ="sema">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="organ-badge sema" style="margin:0;padding:2px 8px;font-size:10.5px;">SEMA-MT</span>
+      ETAPA DE SOLICITAÇÃO DE LI — SEMA-MT
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step" data-id="li-se-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Publicação do Deferimento da LP + Início LI</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="li-se-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Relatório de Condicionantes LP + <span class="glossary" data-tip="Plano de Controle Ambiental / Plano Básico Ambiental">PCA/PBA</span></div><div class="step-desc">Atender TRP nº126.</div><details><summary>Ver documentos TRP nº126</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>TRP nº126</h4><ul><li>Relatório condicionantes LP</li><li>Projeto Executivo de Engenharia</li><li>PCA/PBA com ART</li><li>PRAD (se aplicável) com ART</li><li>LO Provisória para jazidas</li><li>LO Provisória para canteiros</li><li>Programa de realocação (se desapropriação)</li><li>Plano de Resgate de Fauna com ART</li></ul></div><div class="doc-checklist" style="margin-top:6px;"><h4>Programas mínimos PCA (TRP nº126)</h4><ul><li>Monitoramento de Impactos nas Obras</li><li>Gerenciamento de Resíduos Sólidos</li><li>Controle de Efluentes Sanitários</li><li>Controle de Processos Erosivos</li><li>Minimização da Supressão de Vegetação</li><li>PRAD</li><li>Mitigação de Impactos Fauna</li></ul></div></div></details><div class="step-meta"><span class="meta-doc">TRP nº126</span><span class="meta-rumo">RUMO + Consultoria</span></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Tem Fragmentos Florestais?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p><span class="glossary" data-tip="Plano de Exploração Florestal">PEF</span> conforme TRP nº04</p></div><div class="decision-opt"><div class="opt-label" style="color:#FBD300;">Árvores isoladas</div><p><span class="glossary" data-tip="Autorização de Corte de Áreas Isoladas">ACAI</span></p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Captação de água / recursos hídricos?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">Superficial</div><p>TRP nº02 → SIGA → Parecer → Outorga (<strong>180 dias</strong>)</p></div><div class="decision-opt"><div class="opt-label opt-yes">Subterrânea</div><p>TRP nº10 (Perfuração 6m) → TRP nº12 (Outorga <strong>180 dias</strong>)</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Programa de Fauna com captura/coleta?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">Fauna terrestre</div><p>Manejo de Fauna — TRP nº178</p></div><div class="decision-opt"><div class="opt-label opt-yes">Ictiofauna</div><p>Licença Especial de Pesca — TRP nº179</p></div></div></div>
+
+        <div class="step" data-id="li-se-5"><div class="step-num doc">5</div><div class="step-content"><div class="step-title">Protocolo Relatório + PCA/PBA + TRP nº126</div><div class="step-desc">Publicação resumida no Diário Oficial do Estado.</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="li-se-6"><div class="step-num sema">6</div><div class="step-content"><div class="step-title">Análise SEMA → Emissão da LI</div><div class="step-desc">Emissão do Termo de Compromisso de Compensação Ambiental.</div><div class="step-meta"><span class="meta-organ">SEMA</span><span class="meta-doc">TCCA</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LI CETESB -->
+  <div class="section-group section-cetesb" data-organ="cetesb">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="organ-badge cetesb" style="margin:0;padding:2px 8px;font-size:10.5px;">CETESB-SP</span>
+      ETAPA DE SOLICITAÇÃO DE LI — CETESB (SP)
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step" data-id="li-ct-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Relatório de Condicionantes LP + PBA</div><div class="step-meta"><span class="meta-rumo">RUMO + Consultoria</span></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Supressão de vegetação (CETESB)?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM — Fragmentos</div><p>ASV via CETESB. Compensação conforme Resolução SEMIL nº02/2024.</p><details style="margin-top:4px;"><summary>Ver docs ASV CETESB</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>ASV CETESB</h4><ul><li>Ofício solicitando ASV</li><li>Ficha cadastral CETESB</li><li>Comprovante de pagamento</li><li>Certidão municipal uso do solo</li><li>Matrícula do imóvel atualizada</li><li>Anuência do(s) proprietário(s)</li><li>Laudo de Caracterização das Intervenções</li><li>Laudo de Fauna (DD CETESB 167/2015/C)</li><li>ART do profissional responsável</li><li>Projeto de Restauração (Res. SMA 32/2014)</li></ul></div></div></details></div><div class="decision-opt"><div class="opt-label" style="color:#FBD300;">Árvores isoladas</div><p>ACAI</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Captação / recursos hídricos (SP)?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Outorga via <strong>SP Águas / DAEE</strong> (SOE online)</p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Encerrado</p></div></div></div>
+
+        <div class="decision-block"><div class="decision-q">&#10067; Fauna envolve manejo (SP)?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">SIM</div><p>Manejo in situ via <span class="glossary" data-tip="Sistema Integrado de Gestão de Fauna Silvestre">GEFAU</span></p></div><div class="decision-opt"><div class="opt-label opt-no">NÃO</div><p>Não iniciado</p></div></div></div>
+
+        <div class="step" data-id="li-ct-4"><div class="step-num rumo">4</div><div class="step-content"><div class="step-title">Protocolo Pedido de LI (CETESB)</div><div class="step-desc">Publicação DOU + jornais. Taxas.</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="li-ct-5"><div class="step-num cetesb">5</div><div class="step-content"><div class="step-title">Análise CETESB → Parecer → Emissão da LI</div><div class="step-desc">Prazo máximo: 12 meses.</div><div class="step-meta"><span class="meta-deadline">Prazo máximo: 12 meses</span><span class="meta-organ">CETESB</span></div></div></div>
+
+        <div class="info-box warn"><strong>Alteração de Traçado após LP:</strong> Elaborar Relatório de Alteração com comparativo ambiental. Verificar DUP.</div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-li -->
+
+
+<!-- ===================== TAB LI-IMPLANTAÇÃO ===================== -->
+<div id="tab-li-implant" class="tab-pane">
+  <div class="toolbar">
+    <button class="tb-btn" onclick="toggleAll('li-implant','expand')">&#9660; Expandir</button>
+    <button class="tb-btn" onclick="toggleAll('li-implant','collapse')">&#9650; Recolher</button>
+  </div>
+
+  <div class="overview-card"><div class="overview-icon">&#128295;</div><div><h2>Fase de Implantação — Durante a Execução das Obras</h2><p>Com a LI emitida, acompanhar programas ambientais e reunir documentação para a LO.</p><div class="overview-tags"><span class="tag tag-warn">Programas ambientais ativos</span><span class="tag tag-blue">Relatórios periódicos</span><span class="tag tag-blue">Compensações florestais</span></div></div></div>
+
+  <div class="section-group section-implant">
+    <div class="section-header" onclick="toggleSection(this)">&#127959; EXECUÇÃO DA OBRA — IMPLANTAÇÃO<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step" data-id="impl-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Início da Implantação do Empreendimento</div><div class="step-desc">Publicação da Emissão da LI. Início das obras.</div><div class="step-meta"><span class="meta-ok">LI emitida → Obras iniciam</span></div></div></div>
+
+        <div class="step" data-id="impl-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Execução dos Programas Ambientais (PGA/PCA/PBA)</div><details><summary>Ver lista de programas</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Programas Ambientais (exemplos)</h4><ul><li>Gestão de Obras</li><li>Monitoramento de Fauna</li><li>Monitoramento de Flora</li><li>PRAD</li><li>Monitoramento Qualidade do Ar</li><li>Educação Ambiental</li><li>Comunicação Social</li><li>Arqueologia (quando pertinente)</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="impl-3"><div class="step-num rumo">3</div><div class="step-content"><div class="step-title">Relatórios de Monitoramento Periódicos</div><div class="step-desc">Apresentar ao órgão ambiental conforme frequência do PBA.</div><div class="step-meta"><span class="meta-doc">Relatório periódico PBA</span><span class="meta-rumo">RUMO</span></div></div></div>
+
+        <div class="step" data-id="impl-4"><div class="step-num rumo">4</div><div class="step-content"><div class="step-title">Manter Autorizações Complementares Vigentes</div><div class="step-desc">Abio, ASV, Compensação, Fauna, Pesca...</div><div class="step-meta"><span class="meta-warn">Verificar vigência regularmente</span></div></div></div>
+
+        <div class="step" data-id="impl-5"><div class="step-num rumo">5</div><div class="step-content"><div class="step-title">Verificação do Cumprimento das Condicionantes da LI</div><div class="step-meta"><span class="meta-rumo">RUMO — Equipe Meio Ambiente</span></div></div></div>
+
+        <div class="step" data-id="impl-6"><div class="step-num rumo">6</div><div class="step-content"><div class="step-title">Finalizada Supressão → Compensações</div><div class="step-desc">(1) Reposição Florestal (2) Compensação SNUC + Quitação <span class="glossary" data-tip="Termo de Compromisso de Compensação Ambiental">TCCA</span></div><div class="step-meta"><span class="meta-doc">Reposição Florestal</span><span class="meta-doc">Quitação TCCA</span></div></div></div>
+
+        <div class="step" data-id="impl-7"><div class="step-num doc">7</div><div class="step-content"><div class="step-title">Relatórios Finais das Autorizações Emitidas</div><div class="step-desc">ASV, Manejo de Fauna, Material Botânico, Licença de Pesca.</div><div class="step-meta"><span class="meta-rumo">RUMO + Consultoria</span></div></div></div>
+
+        <div class="step" data-id="impl-8"><div class="step-num doc">8</div><div class="step-content"><div class="step-title">Relatório Consolidado + Condicionantes LI</div><div class="step-desc">Dados quantitativos e qualitativos de todas as ações da fase de obras.</div><div class="step-meta"><span class="meta-rumo">RUMO + Consultoria</span></div></div></div>
+
+        <div class="step" data-id="impl-9"><div class="step-num doc">9</div><div class="step-content"><div class="step-title">Protocolo para Solicitar LO</div><div class="step-desc">Organizar documentação e protocolar conforme aba LO — Operação.</div><div class="step-meta"><span class="meta-ok">Avançar para LO</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-li-implant -->
+
+
+<!-- ===================== TAB LO ===================== -->
+<div id="tab-lo" class="tab-pane">
+  <div class="toolbar">
+    <span class="toolbar-label">Filtrar:</span>
+    <button class="tb-btn active" onclick="filterOrgan('lo','all',this)">Todos</button>
+    <button class="tb-btn ibama" onclick="filterOrgan('lo','ibama',this)">IBAMA</button>
+    <button class="tb-btn sema" onclick="filterOrgan('lo','sema',this)">SEMA</button>
+    <button class="tb-btn cetesb" onclick="filterOrgan('lo','cetesb',this)">CETESB</button>
+    <div class="toolbar-sep"></div>
+    <button class="tb-btn" onclick="toggleAll('lo','expand')">&#9660; Expandir</button>
+    <button class="tb-btn" onclick="toggleAll('lo','collapse')">&#9650; Recolher</button>
+  </div>
+
+  <div class="overview-card"><div class="overview-icon">&#x1F7E8;</div><div><h2>Licença de Operação (<span class="glossary" data-tip="Licença de Operação — autoriza o funcionamento do empreendimento">LO</span>) — Autorização para Operar</h2><p>A LO autoriza o funcionamento após cumprimento de todas as condicionantes da LI e programas ambientais.</p><div class="overview-tags"><span class="tag tag-ibama">IBAMA</span><span class="tag tag-sema">SEMA-MT</span><span class="tag tag-cetesb">CETESB-SP</span><span class="tag tag-warn">Compensação quitada</span></div></div></div>
+
+  <!-- LO IBAMA -->
+  <div class="section-group section-ibama" data-organ="ibama">
+    <div class="section-header" onclick="toggleSection(this)"><span class="organ-badge ibama" style="margin:0;padding:2px 8px;font-size:10.5px;">IBAMA</span> ETAPA DE LO — IBAMA<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body"><div class="steps">
+      <div class="step" data-id="lo-ib-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Requerimento de LO no SISG-LAF</div><details><summary>Ver documentos LO (IBAMA)</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Documentos LO — IBAMA</h4><ul><li>Relatório condicionantes LI</li><li>Relatórios dos programas ambientais</li><li>Relatório consolidado (quantitativo + qualitativo)</li><li>Comprovação de Compensações (Lei 9.985/2000)</li><li>Certidões/anuências (IPHAN, ICMBio, FUNAI, FCP)</li></ul></div></div></details><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+      <div class="step" data-id="lo-ib-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Publicação no DOU e Jornais</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+      <div class="step" data-id="lo-ib-3"><div class="step-num ibama">3</div><div class="step-content"><div class="step-title">Análise pelo IBAMA → PTC</div><div class="step-desc">45 dias a partir do protocolo. Máximo 12 meses.</div><div class="step-meta"><span class="meta-deadline">45 dias</span><span class="meta-deadline">Máximo: 12 meses</span><span class="meta-organ">IBAMA</span></div></div></div>
+
+      <div class="decision-block"><div class="decision-q">&#10067; LO Deferida?</div><div class="decision-options"><div class="decision-opt"><div class="opt-label opt-yes">DEFERIU</div><p>DOU + Taxas + <strong>Emissão da LO</strong></p><p style="color:#1E9F7F;font-weight:600;margin-top:3px;">Empreendimento autorizado a operar!</p></div><div class="decision-opt"><div class="opt-label opt-no">INDEFERIU</div><p>Encerramento. Avaliar recurso.</p></div></div></div>
+
+      <div class="step" data-id="lo-ib-5"><div class="step-num ibama">5</div><div class="step-content"><div class="step-title">Pós-LO — Acompanhamento pelo IBAMA</div><div class="step-desc">Relatórios de condicionantes da LO conforme PGA de operação.</div><div class="step-meta"><span class="meta-doc">Relatórios de Cumprimento</span><span class="meta-warn">Conformidade contínua</span></div></div></div>
+    </div></div>
+  </div>
+
+  <!-- LO SEMA -->
+  <div class="section-group section-sema" data-organ="sema">
+    <div class="section-header" onclick="toggleSection(this)"><span class="organ-badge sema" style="margin:0;padding:2px 8px;font-size:10.5px;">SEMA-MT</span> ETAPA DE LO — SEMA-MT<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body"><div class="steps">
+      <div class="step" data-id="lo-se-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Atender TRP nº127 — Documentos para LO</div><details><summary>Ver TRP nº127</summary><div class="details-content"><div class="doc-checklist"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>TRP nº127 — LO</h4><ul><li>Documentação do Empreendedor</li><li>Documentos Gerais</li><li>Relatório condicionantes LI</li><li>Relatório técnico consolidado + fotos</li><li>Planos de monitoramento para operação (PBAO)</li><li>Termo de Quitação da Compensação Ambiental</li><li>Termo de Pactuação da CLPI</li></ul></div></div></details><div class="step-meta"><span class="meta-doc">TRP nº127</span><span class="meta-rumo">RUMO</span></div></div></div>
+
+      <div class="step" data-id="lo-se-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Publicação no Diário Oficial do Estado</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+      <div class="step" data-id="lo-se-3"><div class="step-num sema">3</div><div class="step-content"><div class="step-title">Análise SEMA → Parecer → Emissão da LO</div><div class="step-desc">Prazo máximo: 180 dias. Se indeferido: 20 dias para revisão.</div><div class="step-meta"><span class="meta-deadline">Prazo máximo: 180 dias</span><span class="meta-warn">Indeferido: 20 dias p/ revisão</span><span class="meta-organ">SEMA</span></div></div></div>
+
+      <div class="step" data-id="lo-se-4"><div class="step-num sema">4</div><div class="step-content"><div class="step-title">Pós-LO — Acompanhamento pela SEMA</div><div class="step-meta"><span class="meta-doc">Relatórios periódicos de operação</span></div></div></div>
+    </div></div>
+  </div>
+
+  <!-- LO CETESB -->
+  <div class="section-group section-cetesb" data-organ="cetesb">
+    <div class="section-header" onclick="toggleSection(this)"><span class="organ-badge cetesb" style="margin:0;padding:2px 8px;font-size:10.5px;">CETESB-SP</span> ETAPA DE LO — CETESB (SP)<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body"><div class="steps">
+      <div class="step" data-id="lo-ct-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Ficha Cadastral para LO</div><div class="step-desc">E-mail: <strong>idad_cetesb@sp.gov.br</strong></div><div class="step-meta"><span class="meta-doc">Ficha Cadastral</span><span class="meta-rumo">RUMO</span></div></div></div>
+
+      <div class="step" data-id="lo-ct-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Pagamento do Boleto (IDAD)</div><div class="step-meta"><span class="meta-rumo">RUMO</span></div></div></div>
+
+      <div class="step" data-id="lo-ct-3"><div class="step-num rumo">3</div><div class="step-content"><div class="step-title">Upload no Sistema e-Ambiente (CETESB)</div><div class="step-desc">Documentos de LP/LI, relatórios, dados brutos, relatório contábil.</div><div class="step-meta"><span class="meta-doc">Documentos LP/LI</span><span class="meta-doc">Relatórios programas</span><span class="meta-doc">Dados brutos</span></div></div></div>
+
+      <div class="step" data-id="lo-ct-4"><div class="step-num cetesb">4</div><div class="step-content"><div class="step-title">Análise CETESB → Parecer → Emissão LO</div><div class="step-desc">Prazo máximo: 12 meses.</div><div class="step-meta"><span class="meta-deadline">Prazo máximo: 12 meses</span><span class="meta-organ">CETESB</span></div></div></div>
+
+      <div class="step" data-id="lo-ct-5"><div class="step-num cetesb">5</div><div class="step-content"><div class="step-title">Pós-LO — Acompanhamento pela CETESB</div><div class="step-meta"><span class="meta-doc">Relatórios periódicos de operação</span></div></div></div>
+    </div></div>
+  </div>
+</div><!-- /tab-lo -->
+
+
+<!-- ===================== TAB CONAMA 479 ===================== -->
+<div id="tab-conama" class="tab-pane">
+  <div class="toolbar">
+    <button class="tb-btn" onclick="toggleAll('conama','expand')">&#9660; Expandir</button>
+    <button class="tb-btn" onclick="toggleAll('conama','collapse')">&#9650; Recolher</button>
+  </div>
+
+  <div class="overview-card"><div class="overview-icon">&#128203;</div><div><h2>CONAMA 479/2017 — Rito Simplificado para Ferrovias</h2><p>Procedimentos simplificados para regularização, melhoramento, ampliação, emergência e manutenção de ferrovias existentes <strong>dentro da faixa de domínio</strong>.</p><div class="overview-tags"><span class="tag tag-ibama">IBAMA</span><span class="tag tag-warn">Faixa de domínio</span><span class="tag tag-blue">Rito simplificado</span></div></div></div>
+
+  <div class="section-group section-conama">
+    <div class="section-header" onclick="toggleSection(this)">&#128679; REGULARIZAÇÃO<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body">
+      <div class="info-box warn"><strong>Empreendimento principal já tem LO?</strong> SIM → rito abaixo. NÃO → Voltar LP→LI→LO completo.</div>
+      <div class="steps">
+        <div class="step" data-id="cn-reg-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Pedido de Regularização ao Órgão Ambiental</div><div class="step-desc">Celebração de Termo de Compromisso.</div></div></div>
+        <div class="step" data-id="cn-reg-2"><div class="step-num doc">2</div><div class="step-content"><div class="step-title">Elaboração do <span class="glossary" data-tip="Relatório de Controle Ambiental">RCA</span> + <span class="glossary" data-tip="Plano de Controle Ambiental">PCA</span></div><div class="step-desc"><strong>RCA:</strong> caracterização, não conformidades, gestão de risco. <strong>PCA:</strong> medidas mitigadoras.</div></div></div>
+        <div class="step" data-id="cn-reg-3"><div class="step-num rumo">3</div><div class="step-content"><div class="step-title">Relatórios de Acompanhamento</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-group section-conama">
+    <div class="section-header" onclick="toggleSection(this)">&#128296; MELHORAMENTO E AMPLIAÇÃO<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body">
+      <div class="info-box info"><strong>Atividades de Melhoramento:</strong> reforma da linha férrea, transposição (viadutos, passarelas, tubulações). Não inclui duplicação.</div>
+      <div class="decision-block"><div class="decision-q">&#10067; Classificação conforme NT SEMA nº189975</div><div class="decision-options"><div class="decision-opt"><div class="opt-label" style="color:#1E9F7F;">Grupo A</div><p>Menor complexidade</p></div><div class="decision-opt"><div class="opt-label" style="color:#F78344;">Grupo B</div><p>Complexidade intermediária</p></div><div class="decision-opt"><div class="opt-label" style="color:#c62828;">Grupo C</div><p>Maior complexidade</p></div></div></div>
+      <div class="steps">
+        <div class="step" data-id="cn-mel-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Elaboração de <span class="glossary" data-tip="Relatório Ambiental Simplificado">RAS</span></div><div class="step-desc">Dados secundários + monitoramentos pré-existentes.</div></div></div>
+        <div class="step" data-id="cn-mel-2"><div class="step-num rumo">2</div><div class="step-content"><div class="step-title">Requerimento de LI</div></div></div>
+        <div class="step" data-id="cn-mel-3"><div class="step-num ibama">3</div><div class="step-content"><div class="step-title">Análise pelo Órgão Ambiental</div><div class="step-desc">90 dias corridos para manifestação.</div><div class="step-meta"><span class="meta-deadline">90 dias corridos</span></div></div></div>
+        <div class="step" data-id="cn-mel-4"><div class="step-num ibama">4</div><div class="step-content"><div class="step-title">Emissão da LI</div><div class="step-desc">Renovação: 120 dias de antecedência à expiração.</div><div class="step-meta"><span class="meta-warn">Renovação: 120 dias antecedência</span></div></div></div>
+        <div class="step" data-id="cn-mel-5"><div class="step-num rumo">5</div><div class="step-content"><div class="step-title">Acompanhamento Ambiental + Relatórios</div></div></div>
+        <div class="step" data-id="cn-mel-6"><div class="step-num rumo">6</div><div class="step-content"><div class="step-title">Solicitação de LO</div><div class="step-desc">90 dias para manifestação. LO autoriza supressão até 1ha (exceto APP, RL, UC).</div><div class="step-meta"><span class="meta-ok">LO individual ou vinculada à principal</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-group section-conama">
+    <div class="section-header" onclick="toggleSection(this)">&#128680; OBRAS DE EMERGÊNCIA / URGÊNCIA<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body">
+      <div class="info-box danger"><strong>Emergências:</strong> risco ao meio ambiente, saúde, segurança. Comunicar <strong>obrigatória e imediatamente</strong> o órgão ambiental.</div>
+      <div class="grid-2">
+        <div class="card"><h4 style="color:#32A6E6;">Obras de Urgência (programáveis)</h4><ul><li>Informar com <strong>30 dias</strong> de antecedência</li><li>Laudo técnico com ART</li><li>Requerimento de intervenção</li><li>Execução e acompanhamento</li></ul></div>
+        <div class="card"><h4 style="color:#c62828;">Obras de Emergência (imprevisíveis)</h4><ul><li>Informar <strong>imediatamente</strong>: cotra.sede@ibama.gov.br</li><li><strong>30 dias</strong> para entrega de laudo + ART</li><li>Execução imediata</li><li>Relatórios de acompanhamento</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-group section-conama">
+    <div class="section-header" onclick="toggleSection(this)">&#128295; SERVIÇOS DE ROTINA<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body">
+      <div class="info-box success"><strong>Anexo I da CONAMA 479/2017:</strong> dispensados de novas autorizações, mas devem ser reportados.</div>
+      <div class="step" data-id="cn-rot-1"><div class="step-num rumo">1</div><div class="step-content"><div class="step-title">Envio de Relatórios de Acompanhamento Ambiental da LO</div><div class="step-desc">Periodicidade conforme LO.</div><div class="step-meta"><span class="meta-doc">Relatórios periódicos de manutenção</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="section-group section-other">
+    <div class="section-header" onclick="toggleSection(this)">&#127981; UNIDADES DE APOIO (fora da faixa)<span class="section-arrow">&#9660;</span></div>
+    <div class="section-body">
+      <div class="info-box info"><strong>Fora da faixa de domínio</strong> = licenciamento próprio.</div>
+      <div class="doc-checklist" style="margin:6px 0"><button class="copy-btn" onclick="copyChecklist(this)">Copiar</button><h4>Exemplos de Unidades de Apoio</h4><ul><li>Pátios de formação, manobras e transbordo</li><li>Oficinas de manutenção (ETE, SAO, resíduos)</li><li>Usinas de tratamento de dormentes</li><li>Postos de abastecimento</li><li>Estaleiro de soldagem de trilhos</li><li>Estações de controle de tráfego</li><li>Terminais de cargas</li><li>Subestações elétricas</li><li>Lavadores de vagões e locomotivas</li><li>Cabine de pintura</li></ul></div>
+    </div>
+  </div>
+</div><!-- /tab-conama -->
+
+</main>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</button>
+
+<script>
+/* ========== STATE ========== */
+const STORAGE_KEY = 'rumo_lic_state';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+if (!state.lastTab) state.lastTab = 'lp';
+if (!state.dark) state.dark = false;
+
+/* ========== INIT ========== */
+document.addEventListener('DOMContentLoaded', () => {
+  // Restore tab
+  if (state.lastTab) {
+    const t = document.querySelector('.nav-tab[data-tab="'+state.lastTab+'"]');
+    if (t) showTab(state.lastTab, t);
+  }
+  // Restore dark
+  if (state.dark) { document.documentElement.setAttribute('data-theme','dark'); document.getElementById('darkBtn').classList.add('active'); }
+
+  // ── Search event listeners ──
+  const searchInput = document.getElementById('searchInput');
+  const searchPrev  = document.getElementById('searchPrev');
+  const searchNext  = document.getElementById('searchNext');
+  let searchTimer;
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => performSearch(this.value), 250);
+  });
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { clearTimeout(searchTimer); performSearch(this.value); }
+    if (e.key === 'Escape') { this.value = ''; performSearch(''); }
+  });
+  searchPrev.addEventListener('click', () => searchNav(-1));
+  searchNext.addEventListener('click', () => searchNav(1));
+
+  // ── ARIA: accordion sections ──
+  document.querySelectorAll('.section-header').forEach(h => {
+    h.setAttribute('role', 'button');
+    h.setAttribute('aria-expanded', 'false');
+    const body = h.nextElementSibling;
+    if (body) {
+      const id = 'sec-' + Math.random().toString(36).slice(2,7);
+      body.id = id;
+      h.setAttribute('aria-controls', id);
+    }
+    h.setAttribute('tabindex', '0');
+    h.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSection(h); }
+    });
+  });
+
+  // ── Keyboard shortcuts ──
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement.tagName;
+    const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    // Ctrl+K / Cmd+K → focus search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus(); searchInput.select();
+      return;
+    }
+    if (inInput) return; // don't fire shortcuts while typing
+    // Alt+→ / Alt+← → navigate tabs
+    if (e.altKey && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      e.preventDefault();
+      const tabs = Array.from(document.querySelectorAll('.nav-tab'));
+      const cur  = tabs.findIndex(t => t.classList.contains('active'));
+      const next = e.key === 'ArrowRight' ? Math.min(cur+1, tabs.length-1) : Math.max(cur-1, 0);
+      if (next !== cur) { tabs[next].click(); tabs[next].focus(); }
+      return;
+    }
+    // Alt+D → dark mode
+    if (e.altKey && e.key === 'd') { e.preventDefault(); toggleDark(); return; }
+    // Alt+C → compact mode
+    if (e.altKey && e.key === 'c') { e.preventDefault(); toggleCompact(); return; }
+    // Alt+E → expand all | Alt+R → collapse all
+    if (e.altKey && e.key === 'e') { e.preventDefault(); const tab = document.querySelector('.tab-pane.active'); if(tab) toggleAll(tab.id.replace('tab-',''),'expand'); return; }
+    if (e.altKey && e.key === 'r') { e.preventDefault(); const tab = document.querySelector('.tab-pane.active'); if(tab) toggleAll(tab.id.replace('tab-',''),'collapse'); return; }
+    // Esc → close any open modal or shortcuts panel
+    if (e.key === 'Escape') {
+      closeWizard(); closeDeadlineCalc();
+      const sp = document.getElementById('shortcutsPanel');
+      if (sp.classList.contains('show')) toggleShortcutsHelp();
+    }
+  });
+
+  // ── Swipe to change tabs (mobile) ──
+  let touchStartX = 0;
+  document.querySelector('main').addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].clientX;
+  }, { passive: true });
+  document.querySelector('main').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) < 60) return; // ignore small swipes
+    const tabs = Array.from(document.querySelectorAll('.nav-tab'));
+    const cur  = tabs.findIndex(t => t.classList.contains('active'));
+    const next = dx < 0 ? Math.min(cur+1, tabs.length-1) : Math.max(cur-1, 0);
+    if (next !== cur) tabs[next].click();
+  }, { passive: true });
+
+  // ── Clickable overview tags → activate filter ──
+  document.querySelectorAll('.tag[data-filter]').forEach(tag => {
+    const activate = () => {
+      const pane = tag.closest('.tab-pane');
+      if (!pane) return;
+      const tabId = pane.id.replace('tab-', '');
+      const organ = tag.dataset.filter;
+      const btn = pane.querySelector('.tb-btn.' + organ);
+      if (btn) { filterOrgan(tabId, organ, btn); btn.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+    };
+    tag.addEventListener('click', activate);
+    tag.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+  });
+
+  // ── Close shortcuts panel when clicking outside ──
+  document.addEventListener('click', e => {
+    const panel = document.getElementById('shortcutsPanel');
+    const btn   = document.getElementById('shortcutsBtn');
+    if (panel.classList.contains('show') && !panel.contains(e.target) && !btn.contains(e.target)) {
+      panel.classList.remove('show');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+
+/* ========== TAB NAVIGATION ========== */
+function showTab(tabId, el) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+    t.setAttribute('tabindex', '-1');
+  });
+  document.getElementById('tab-' + tabId).classList.add('active');
+  const activeTab = el || document.querySelector('.nav-tab[data-tab="'+tabId+'"]');
+  if (activeTab) {
+    activeTab.classList.add('active');
+    activeTab.setAttribute('aria-selected', 'true');
+    activeTab.setAttribute('tabindex', '0');
+  }
+  state.lastTab = tabId; saveState();
+  hideSearchEmpty();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ========== SECTION TOGGLE ========== */
+function toggleSection(h) {
+  const isOpen = h.classList.toggle('open');
+  h.nextElementSibling.classList.toggle('open', isOpen);
+  h.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+/* ========== STATE PERSISTENCE ========== */
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+/* ========== DARK MODE ========== */
+function toggleDark() {
+  state.dark = !state.dark;
+  document.documentElement.setAttribute('data-theme', state.dark ? 'dark' : 'light');
+  const btn = document.getElementById('darkBtn');
+  btn.classList.toggle('active', state.dark);
+  btn.setAttribute('aria-pressed', state.dark ? 'true' : 'false');
+  saveState();
+}
+
+/* ========== COMPACT MODE ========== */
+function toggleCompact() {
+  document.body.classList.toggle('compact');
+  const on = document.body.classList.contains('compact');
+  const btn = document.getElementById('compactBtn');
+  btn.classList.toggle('active', on);
+  btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
+
+/* ========== SHORTCUTS PANEL ========== */
+function toggleShortcutsHelp() {
+  const panel = document.getElementById('shortcutsPanel');
+  const btn   = document.getElementById('shortcutsBtn');
+  const show  = panel.classList.toggle('show');
+  btn.setAttribute('aria-expanded', show ? 'true' : 'false');
+  btn.classList.toggle('active', show);
+}
+
+/* ========== EXPAND / COLLAPSE ALL ========== */
+function toggleAll(tabId, action) {
+  const pane = document.getElementById('tab-' + tabId);
+  pane.querySelectorAll('.section-header').forEach(h => {
+    const b = h.nextElementSibling;
+    if (action === 'expand') { h.classList.add('open'); b.classList.add('open'); }
+    else { h.classList.remove('open'); b.classList.remove('open'); }
+  });
+}
+
+/* ========== ORGAN FILTER ========== */
+function filterOrgan(tabId, organ, btn) {
+  const pane = document.getElementById('tab-' + tabId);
+  pane.querySelectorAll('.toolbar .tb-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  pane.querySelectorAll('.section-group[data-organ]').forEach(g => {
+    if (organ === 'all' || g.dataset.organ === organ || g.dataset.organ === 'prelicen') {
+      g.style.display = '';
+    } else {
+      g.style.display = 'none';
+    }
+  });
+}
+
+/* ========== GLOBAL SEARCH ========== */
+let searchMatches = [];
+let searchIndex = 0;
+
+function updateSearchCounter() {
+  const txt = document.getElementById('searchCountText');
+  const prev = document.getElementById('searchPrev');
+  const next = document.getElementById('searchNext');
+  if (!searchMatches.length) {
+    txt.textContent = '';
+    prev.disabled = true;
+    next.disabled = true;
+    return;
+  }
+  txt.textContent = (searchIndex + 1) + ' de ' + searchMatches.length;
+  prev.disabled = searchIndex === 0;
+  next.disabled = searchIndex === searchMatches.length - 1;
+}
+
+function scrollToMatch(idx) {
+  if (!searchMatches.length) return;
+  searchMatches.forEach(m => m.classList.remove('current'));
+  const el = searchMatches[idx];
+  el.classList.add('current');
+  // Open section if collapsed
+  const sec = el.closest('.section-body');
+  if (sec && !sec.classList.contains('open')) {
+    sec.classList.add('open');
+    sec.previousElementSibling.classList.add('open');
+  }
+  // Switch tab if needed
+  const pane = el.closest('.tab-pane');
+  if (pane && !pane.classList.contains('active')) {
+    const tabId = pane.id.replace('tab-', '');
+    showTab(tabId, document.querySelector('.nav-tab[data-tab="'+tabId+'"]'));
+  }
+  // Wait for accordion animation (450ms) + tab switch before scrolling
+  setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'center' }), 480);
+}
+
+function searchNav(dir) {
+  if (!searchMatches.length) return;
+  searchIndex = Math.max(0, Math.min(searchMatches.length - 1, searchIndex + dir));
+  scrollToMatch(searchIndex);
+  updateSearchCounter();
+}
+
+function performSearch(q) {
+  // Remove old highlights
+  document.querySelectorAll('mark.search-hl').forEach(m => {
+    const parent = m.parentNode;
+    parent.replaceChild(document.createTextNode(m.textContent), m);
+    parent.normalize();
+  });
+  searchMatches = [];
+  searchIndex = 0;
+  const txt = document.getElementById('searchCountText');
+  const prev = document.getElementById('searchPrev');
+  const next = document.getElementById('searchNext');
+  if (!q || q.length < 2) {
+    txt.textContent = ''; prev.disabled = true; next.disabled = true;
+    hideSearchEmpty(); return;
+  }
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // splitRegex: stateful (for split with capturing group)
+  const splitRegex = new RegExp('(' + escaped + ')', 'gi');
+  // testRegex: fresh each call, used only once per node via .test()
+  const testRegex  = new RegExp(escaped, 'i');
+  const qlower = q.toLowerCase();
+
+  // Walk only .steps content inside each tab-pane (excludes toolbar, header, modals)
+  const nodes = [];
+  document.querySelectorAll('.tab-pane .section-group').forEach(group => {
+    const walker = document.createTreeWalker(group, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (testRegex.test(node.textContent) && node.textContent.trim().length > 0) {
+        nodes.push(node);
+      }
+    }
+  });
+  nodes.forEach(node => {
+    const parts = node.textContent.split(splitRegex);
+    if (parts.length <= 1) return;
+    const frag = document.createDocumentFragment();
+    parts.forEach(part => {
+      // Identify match parts by case-insensitive string comparison — avoids regex state bugs
+      if (part.toLowerCase() === qlower) {
+        const m = document.createElement('mark');
+        m.className = 'search-hl';
+        m.textContent = part;
+        frag.appendChild(m);
+        searchMatches.push(m);
+      } else {
+        frag.appendChild(document.createTextNode(part));
+      }
+    });
+    node.parentNode.replaceChild(frag, node);
+  });
+
+  hideSearchEmpty();
+  if (searchMatches.length) {
+    scrollToMatch(0);
+    updateSearchCounter();
+  } else {
+    txt.textContent = '';
+    prev.disabled = true;
+    next.disabled = true;
+    showSearchEmpty(q);
+  }
+}
+
+function showSearchEmpty(q) {
+  // Remove any existing empty state
+  hideSearchEmpty();
+  const pane = document.querySelector('.tab-pane.active') || document.querySelector('.tab-pane');
+  if (!pane) return;
+  const el = document.createElement('div');
+  el.id = 'search-empty';
+  el.className = 'search-empty-state visible';
+  el.innerHTML = `
+    <div class="search-empty-icon">&#128270;</div>
+    <div class="search-empty-title">Nenhum resultado para <em>&ldquo;${q.replace(/</g,'&lt;')}&rdquo;</em></div>
+    <div class="search-empty-sub">Tente um termo diferente ou verifique a grafia. Você também pode buscar por siglas como <strong>EIA</strong>, <strong>PRAD</strong>, <strong>AAF</strong> ou <strong>RAA</strong>.</div>
+  `;
+  pane.prepend(el);
+}
+
+function hideSearchEmpty() {
+  const el = document.getElementById('search-empty');
+  if (el) el.remove();
+}
+
+/* ========== COPY CHECKLIST ========== */
+function copyChecklist(btn) {
+  const cl = btn.closest('.doc-checklist');
+  const items = Array.from(cl.querySelectorAll('li')).map(li => '- ' + li.textContent.trim()).join('\n');
+  const title = cl.querySelector('h4')?.textContent?.trim() || '';
+  navigator.clipboard.writeText(title + '\n' + items).then(() => {
+    btn.textContent = 'Copiado!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+/* ========== WIZARD ========== */
+let wizState = {};
+function openWizard() { document.getElementById('wizardModal').classList.add('show'); wizState = {}; resetWizard(); }
+function closeWizard() { document.getElementById('wizardModal').classList.remove('show'); }
+function resetWizard() {
+  ['wiz-step1','wiz-step2','wiz-step3','wizResult'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.querySelectorAll('.wiz-opt').forEach(o => o.classList.remove('selected'));
+}
+function wizSelect(step, key, val, el) {
+  wizState[key] = val;
+  el.parentElement.querySelectorAll('.wiz-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (step === 0) {
+    if (val === 'nao') { document.getElementById('wiz-step1').style.display = ''; document.getElementById('wiz-step2').style.display = 'none'; }
+    else { document.getElementById('wiz-step1').style.display = 'none'; }
+    document.getElementById('wiz-step2').style.display = '';
+    document.getElementById('wiz-step3').style.display = 'none';
+    document.getElementById('wizResult').style.display = 'none';
+  } else if (step === 1 || step === 2) {
+    if (wizState.tipo === 'reg' || wizState.tipo === 'emerg') { showWizResult(); }
+    else {
+      if (step === 1) document.getElementById('wiz-step2').style.display = '';
+      if (step === 2 && val !== 'reg' && val !== 'emerg') document.getElementById('wiz-step3').style.display = '';
+      else showWizResult();
+    }
+  } else if (step === 3) { showWizResult(); }
+}
+function showWizResult() {
+  const r = document.getElementById('wizResult');
+  let tab = 'lp', org = '', msg = '';
+  if (wizState.tipo === 'reg') { tab = 'conama'; msg = '<strong>CONAMA 479/2017 — Regularização</strong><br>Abra a aba CONAMA 479 e siga a seção de Regularização.'; }
+  else if (wizState.tipo === 'emerg') { tab = 'conama'; msg = '<strong>CONAMA 479/2017 — Emergência/Urgência</strong><br>Abra a aba CONAMA 479 e siga Obras de Emergência.'; }
+  else {
+    if (wizState.inter === 'sim') org = 'IBAMA (Federal)';
+    else if (wizState.estado === 'mt') org = 'SEMA-MT';
+    else org = 'CETESB-SP';
+    const faseMap = {lp:'LP — Prévia', li:'LI — Instalação', lo:'LO — Operação'};
+    const fase = faseMap[wizState.fase] || 'LP — Prévia';
+    tab = wizState.fase || 'lp';
+    if (tab === 'li' && !wizState.fase) tab = 'lp';
+    msg = '<strong>'+fase+'</strong> via <strong>'+org+'</strong><br>O órgão licenciador e a fase foram identificados. Clique abaixo para navegar.';
+  }
+  r.innerHTML = '<div class="wiz-result">'+msg+'<br><button class="wiz-nav-btn" onclick="closeWizard();showTab(\''+tab+'\')">Ir para ' + tab.toUpperCase() + '</button></div>';
+  r.style.display = '';
+}
+
+/* ========== DEADLINE CALCULATOR ========== */
+function openDeadlineCalc() { document.getElementById('deadlineModal').classList.add('show'); }
+function closeDeadlineCalc() { document.getElementById('deadlineModal').classList.remove('show'); }
+function addDays(date, days) { const d = new Date(date); d.setDate(d.getDate() + days); return d; }
+function addBizDays(date, days) { let d = new Date(date); let added = 0; while(added < days) { d.setDate(d.getDate()+1); if(d.getDay()!==0 && d.getDay()!==6) added++; } return d; }
+function fmt(d) { return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',weekday:'short'}); }
+function calcDeadlines() {
+  const val = document.getElementById('dlDate').value;
+  if (!val) return;
+  const base = new Date(val + 'T12:00:00');
+  const deadlines = [
+    ['Instauração do Processo (IBAMA — 10 dias úteis)', addBizDays(base, 10)],
+    ['Emissão do TR (IBAMA — 60 dias corridos)', addDays(base, 60)],
+    ['Emissão do TR (SEMA — 45 dias)', addDays(base, 45)],
+    ['Checklist EIA/RIMA (30 dias corridos)', addDays(base, 30)],
+    ['Audiência Pública (até 45 dias após DOU)', addDays(base, 45)],
+    ['Análise PBA (IBAMA — 75 dias)', addDays(base, 75)],
+    ['Análise LO (IBAMA — 45 dias)', addDays(base, 45)],
+    ['Manifestação CONAMA 479 (90 dias)', addDays(base, 90)],
+    ['Outorga (ANA — 120 dias)', addDays(base, 120)],
+    ['Outorga (SEMA — 180 dias)', addDays(base, 180)],
+    ['Prazo máximo decisão (EIA — 12 meses)', addDays(base, 365)],
+  ];
+  const container = document.getElementById('dlItems');
+  container.innerHTML = deadlines.map(([name,dt]) => '<div class="dl-item"><span class="dl-name">'+name+'</span><span class="dl-date">'+fmt(dt)+'</span></div>').join('');
+  document.getElementById('dlResults').style.display = '';
+}
+
+/* ========== BACK TO TOP ========== */
+window.addEventListener('scroll', () => {
+  document.getElementById('backTop').classList.toggle('show', window.scrollY > 400);
+});
+
+/* ========== KEYBOARD NAV ========== */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const tabs = ['lp','li','li-implant','lo','conama'];
+  const active = document.querySelector('.tab-pane.active');
+  const idx = tabs.findIndex(t => 'tab-' + t === active.id);
+  if (e.key === 'ArrowRight' && idx < tabs.length - 1) showTab(tabs[idx+1]);
+  else if (e.key === 'ArrowLeft' && idx > 0) showTab(tabs[idx-1]);
+  else if (e.key === '/' && !e.ctrlKey) { e.preventDefault(); document.getElementById('searchInput').focus(); }
+});
+</script>
+</body>
+</html>
